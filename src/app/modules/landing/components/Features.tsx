@@ -84,10 +84,10 @@ const Features = () => {
                                 </div>
                                 <div className="relative flex justify-center">
                                     <motion.div
-                                        className="p-2 border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-700 rounded-[32px] max-w-[300px] lg:absolute lg:top-[-50px]"
+                                        className="p-2 border border-gray-200 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 rounded-[32px] max-w-[300px] lg:absolute lg:top-[-50px]"
                                         whileHover={{ y: -20 }}
                                     >
-                                        <div className="absolute inset-x-0 bottom-0 h-20 w-full bg-gradient-to-b from-transparent via-gray-100 to-gray-100 dark:via-zinc-800/70 dark:to-gray-800 scale-[1.1] pointer-events-none" />
+                                        <div className="absolute inset-x-0 bottom-0 h-20 w-full bg-gradient-to-b from-transparent via-gray-200 to-gray-200 dark:via-zinc-800/70 dark:to-gray-800 scale-[1.1] pointer-events-none" />
                                         <div className="bg-white dark:bg-black dark:border-gray-700 border border-gray-200 rounded-[24px] overflow-hidden max-h-[450px]">
                                             <img
                                                 src={birthImg}
@@ -146,7 +146,7 @@ const Features = () => {
                                         className="p-2 border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-700 rounded-[32px] max-w-[300px] lg:absolute lg:top-[-50px]"
                                         whileHover={{ y: -20 }}
                                     >
-                                        <div className="absolute inset-x-0 bottom-0 h-20 w-full bg-gradient-to-b from-transparent via-gray-100 to-gray-100 dark:via-zinc-800/70 dark:to-gray-800 scale-[1.1] pointer-events-none" />
+                                        <div className="absolute inset-x-0 bottom-0 h-20 w-full bg-gradient-to-b from-transparent via-gray-200 to-gray-200 dark:via-zinc-800/70 dark:to-gray-800 scale-[1.1] pointer-events-none" />
                                         <div className="bg-white dark:bg-black dark:border-gray-700 border border-gray-200 rounded-[24px] overflow-hidden max-h-[450px]">
                                             <img
                                                 src={marriageImg}
@@ -202,10 +202,10 @@ const Features = () => {
                                 </div>
                                 <div className="relative flex justify-center">
                                     <motion.div
-                                        className="p-2 border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-700 rounded-[32px] max-w-[300px] lg:absolute lg:top-[-50px]"
+                                        className="p-2 border border-gray-200 bg-gray-100 dark:bg-gray-700 dark:border-gray-700 rounded-[32px] max-w-[300px] lg:absolute lg:top-[-50px]"
                                         whileHover={{ y: -20 }}
                                     >
-                                        <div className="absolute inset-x-0 bottom-0 h-20 w-full bg-gradient-to-b from-transparent via-gray-100 to-gray-100 dark:via-zinc-800/70 dark:to-gray-800 scale-[1.1] pointer-events-none" />
+                                        <div className="absolute inset-x-0 bottom-0 h-20 w-full bg-gradient-to-b from-transparent via-gray-200 to-gray-200 dark:via-zinc-800/70 dark:to-gray-800 scale-[1.1] pointer-events-none" />
                                         <div className="bg-white dark:bg-black dark:border-gray-700 border border-gray-200 rounded-[24px] overflow-hidden max-h-[450px]">
                                             <img
                                                 src={deathImg}
