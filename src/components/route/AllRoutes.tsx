@@ -23,9 +23,9 @@ const AllRoutes = (props: AllRoutesProps) => {
 
     return (
         <Routes>
-            <Route path="/" element={<ProtectedRoute />}>
+            <Route path="/app" element={<ProtectedRoute />}>
                 <Route
-                    path="/"
+                    path="/app"
                     element={<Navigate replace to={authenticatedEntryPath} />}
                 />
                 {protectedRoutes.map((route, index) => (
