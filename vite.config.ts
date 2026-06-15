@@ -7,11 +7,11 @@ import { codeInspectorPlugin } from 'code-inspector-plugin'
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
-        react(),
-        dynamicImport(),
         codeInspectorPlugin({
             bundler: 'vite',
         }),
+        react(),
+        dynamicImport(),
     ],
     assetsInclude: ['**/*.md'],
     resolve: {
