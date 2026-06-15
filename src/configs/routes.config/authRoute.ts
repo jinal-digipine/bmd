@@ -14,7 +14,7 @@ const authRoute: Routes = [
         component: lazy(() => import('@/app/modules/auth/signUp')),
         authority: [],
     },
-    // clerk page testing purpose only
+    //clerk page testing purpose only
     // {
     //     key: 'signUp',
     //     path: `/sign-up`,

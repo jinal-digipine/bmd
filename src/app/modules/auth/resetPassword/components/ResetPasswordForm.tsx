@@ -17,16 +17,16 @@ const ResetPasswordForm = () => {
     return (
         <div>
             <Form onSubmit={onSubmit}>
-                <FormItem label="Email">
+                <FormItem asterisk label="Email">
                     <Input type="email" placeholder="e.g. jin21@gmail.com" />
                 </FormItem>
-                <FormItem label="Password">
+                <FormItem asterisk label="Password">
                     <PasswordInput
                         autoComplete="off"
                         placeholder="Enter atleast 8-digit strong password"
                     />
                 </FormItem>
-                <FormItem label="Confirm Password">
+                <FormItem asterisk label="Confirm Password">
                     <PasswordInput
                         autoComplete="off"
                         placeholder="Confirm Password"
