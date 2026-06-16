@@ -41,46 +41,39 @@ const SignUpForm = () => {
     return (
         <div>
             <Form onSubmit={onSubmit}>
-                <FormItem asterisk label="Aadhar Id">
-                    <div className="flex gap-2">
+                <div className="md:flex  gap-2">
+                    <FormItem asterisk label="Aadhar Id">
                         <Input
                             type="text"
                             prefix={<HiOutlineUser className="text-lg" />}
                             placeholder="e.g. 1234 1234 1234"
                             autoComplete="off"
+                            className="w-93"
                         />
-
-                        <Button variant="solid" type="button">
-                            send
-                        </Button>
-                    </div>
-                </FormItem>
+                    </FormItem>
+                    <Button variant="solid" type="button" className="mt-7">
+                        send
+                    </Button>
+                </div>
                 {/* OTP field */}
                 <div>
                     <div className="mb-8">
-                        <h3 className="mb-2">OTP Verification</h3>
-                        <p className="font-semibold heading-text">
-                            We have sent you OTP to your email.
-                        </p>
+                        <h6 className="mb-2">OTP Verification</h6>
+                        <p>We have sent you OTP to your email.</p>
                     </div>
-
-                    <FormItem>
-                        <div className="flex gap-2">
+                    <div className="flex gap-2">
+                        <FormItem>
                             <OtpInput
                                 placeholder=""
                                 inputClass="h-[58px]"
                                 length={6}
                             />
-                            <Button
-                                variant="solid"
-                                className="h-14"
-                                type="button"
-                            >
-                                <BiCheckShield className="h-7 w-5" />
-                            </Button>
-                        </div>
-                    </FormItem>
-                    <div className="mt-4 text-center">
+                        </FormItem>
+                        <Button variant="solid" className="h-14" type="button">
+                            <BiCheckShield className="h-7 w-5" />
+                        </Button>
+                    </div>
+                    <div className=" text-center">
                         <span className="font-semibold">
                             Din&apos;t receive OTP?{' '}
                         </span>
