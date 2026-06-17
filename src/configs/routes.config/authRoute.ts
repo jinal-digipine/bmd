@@ -5,25 +5,27 @@ const authRoute: Routes = [
     {
         key: 'signIn',
         path: `/sign-in`,
-        component: lazy(() => import('@/views/auth/SignIn')),
+        component: lazy(() => import('@/app/modules/auth/sign-in')),
         authority: [],
     },
     {
         key: 'signUp',
         path: `/sign-up`,
-        component: lazy(() => import('@/views/auth/SignUp')),
+        component: lazy(() => import('@/app/modules/auth/sign-up')),
         authority: [],
     },
-    {
-        key: 'forgotPassword',
-        path: `/forgot-password`,
-        component: lazy(() => import('@/views/auth/ForgotPassword')),
-        authority: [],
-    },
+    //clerk page testing purpose only
+    // {
+    //     key: 'signUp',
+    //     path: `/sign-up`,
+    //     component: lazy(() => import('@/app/modules/auth/clerk-sign-up')),
+    //     authority: [],
+    // },
+
     {
         key: 'resetPassword',
         path: `/reset-password`,
-        component: lazy(() => import('@/views/auth/ResetPassword')),
+        component: lazy(() => import('@/app/modules/auth/reset-password')),
         authority: [],
     },
 ]

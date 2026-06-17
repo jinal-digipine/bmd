@@ -2,7 +2,7 @@ import classNames from '@/utils/classNames'
 import useScrollTop from '@/utils/hooks/useScrollTop'
 import type { Mode } from '@/@types/theme'
 import { Button } from '@/components/ui'
-import logo from '../../../../assets/images/logobmd.png'
+import logo from '../../../assets/images/logobmd.png'
 import { useNavigate } from 'react-router'
 
 type NavigationProps = {
@@ -16,7 +16,7 @@ const Navigation = ({ toggleMode }: NavigationProps) => {
     const { isSticky } = useScrollTop()
 
     const handleLoginClick = () => {
-        navigate('/sign-in')
+        navigate('/')
     }
     return (
         <div
@@ -99,7 +99,7 @@ const Navigation = ({ toggleMode }: NavigationProps) => {
                             }
                             onClick={handleLoginClick}
                         >
-                            Login
+                            Home
                         </Button>
                     </div>
                 </div>
