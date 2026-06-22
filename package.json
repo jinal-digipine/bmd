@@ -14,6 +14,8 @@
     "format": "npm run prettier:fix && npm run lint:fix"
   },
   "dependencies": {
+    "@duo-icons/react": "^1.0.1",
+    "@duo-icons/tailwind": "^1.0.2",
     "@floating-ui/react": "^0.27.2",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
@@ -22,6 +24,11 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^3.9.0",
+    "@iconify-react/healthicons": "^1.0.2",
+    "@iconify-react/lucide": "^1.0.19",
+    "@iconify-react/mdi": "^1.0.2",
+    "@iconify-react/mingcute": "^1.0.2",
+    "@iconify-react/ph": "^1.0.2",
     "@react-dev-inspector/vite-plugin": "^2.0.1",
     "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.20.5",
@@ -43,6 +50,7 @@
     "html-react-parser": "^5.2.1",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
+    "lucide-react": "^1.21.0",
     "marked": "^15.0.3",
     "react": "19.0.0",
     "react-apexcharts": "^1.7.0",

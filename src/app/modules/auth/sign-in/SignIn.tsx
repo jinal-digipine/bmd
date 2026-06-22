@@ -6,7 +6,7 @@ import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
 
 export const SignInBase = ({
     signUpUrl = '/sign-up',
-    forgetPasswordUrl = '/reset-password',
+    forgotPasswordUrl = '/forgot-password',
 }) => {
     const [isDark, setMode] = useDarkMode()
 
@@ -30,7 +30,7 @@ export const SignInBase = ({
             {
                 <div className="mb-7 mt-2">
                     <ActionLink
-                        to={forgetPasswordUrl}
+                        to={forgotPasswordUrl}
                         className="font-semibold heading-text mt-2 underline"
                         themeColor={false}
                     >

@@ -1,10 +1,10 @@
 import ActionLink from '@/components/shared/ActionLink'
-import ResetPasswordForm from './components/ResetPasswordForm'
+import Navigation from '../NavigationBar'
 import useDarkMode from '@/utils/hooks/useDarkMode'
 import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
-import Navigation from '../NavigationBar'
+import ForgotPasswordForm from './components/ForgotPasswordForm'
 
-export const ResetPasswordBase = ({ signInUrl = '/sign-in' }) => {
+export const ForgotPasswordBase = ({ signInUrl = '/sign-in' }) => {
     const [isDark, setMode] = useDarkMode()
 
     const mode = isDark ? MODE_DARK : MODE_LIGHT
@@ -12,19 +12,22 @@ export const ResetPasswordBase = ({ signInUrl = '/sign-in' }) => {
     const toggleMode = () => {
         setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
     }
+
     return (
         <div className=" w-120 overflow-auto mt-12 px-2">
             <Navigation toggleMode={toggleMode} mode={mode} />
+
             <div className="mb-6">
                 <div>
-                    <h2 className="mb-1">Set new password</h2>
+                    <h2 className="mb-1">Forgot password</h2>
                     <p className="font-semibold heading-text">
-                        Your new password must different from previous password
+                        Please enter your registered email to receive
+                        verification code.
                     </p>
                 </div>
             </div>
 
-            <ResetPasswordForm />
+            <ForgotPasswordForm />
 
             <div className="mt-4 text-center">
                 <span>Back to </span>
@@ -40,8 +43,8 @@ export const ResetPasswordBase = ({ signInUrl = '/sign-in' }) => {
     )
 }
 
-const ResetPassword = () => {
-    return <ResetPasswordBase />
+const ForgotPassword = () => {
+    return <ForgotPasswordBase />
 }
 
-export default ResetPassword
+export default ForgotPassword

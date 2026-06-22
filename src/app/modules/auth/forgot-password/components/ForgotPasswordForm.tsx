@@ -1,11 +1,16 @@
 import Button from '@/components/ui/Button'
 import { useState } from 'react'
 import { FormItem, Form } from '@/components/ui/Form'
-import PasswordInput from '@/components/shared/PasswordInput'
+import { Input } from '@/components/ui'
+import { useNavigate } from 'react-router'
 
-const ResetPasswordForm = () => {
+const ForgotPasswordForm = () => {
     const [submitting, setSubmitting] = useState(false)
+    const navigate = useNavigate()
 
+    const handleLoginClick = () => {
+        navigate('/reset-password')
+    }
     const onSubmit = (values) => {
         setSubmitting(true)
         setTimeout(() => {
@@ -16,23 +21,16 @@ const ResetPasswordForm = () => {
     return (
         <div>
             <Form onSubmit={onSubmit}>
-                <FormItem asterisk label="Password">
-                    <PasswordInput
-                        autoComplete="off"
-                        placeholder="Enter atleast 8-digit strong password"
-                    />
+                <FormItem asterisk label="Email">
+                    <Input type="email" placeholder="e.g. jin21@gmail.com" />
                 </FormItem>
-                <FormItem asterisk label="Confirm Password">
-                    <PasswordInput
-                        autoComplete="off"
-                        placeholder="Confirm Password"
-                    />
-                </FormItem>
+
                 <Button
                     block
                     variant="solid"
                     type="submit"
                     loading={submitting}
+                    onClick={handleLoginClick}
                 >
                     Submit
                 </Button>
@@ -41,4 +39,4 @@ const ResetPasswordForm = () => {
     )
 }
 
-export default ResetPasswordForm
+export default ForgotPasswordForm
