@@ -1,8 +1,4 @@
 import { Button, Card } from '@/components/ui'
-import NavigationBar from './NavigationBar'
-import HomeFooter from './HomeFooter'
-import useDarkMode from '@/utils/hooks/useDarkMode'
-import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
 import Container from './HomeContainer'
 import {
     BadgeInfo,
@@ -18,19 +14,9 @@ import {
 import { ActionLink } from '@/components/shared'
 
 const MyProfile = ({ logOutUrl = '/' }) => {
-    const [isDark, setMode] = useDarkMode()
-
-    const mode = isDark ? MODE_DARK : MODE_LIGHT
-
-    const toggleMode = () => {
-        setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
-    }
-
     return (
         <main>
-            <div className="mb-16">
-                <NavigationBar toggleMode={toggleMode} mode={mode} />
-            </div>
+            <div className="mb-16"></div>
             <Container className="mt-18 max-w-11xl px-10">
                 <div className="">
                     <h2>My Profile</h2>
@@ -117,14 +103,14 @@ const MyProfile = ({ logOutUrl = '/' }) => {
                         </div>
                         <div className="col-span-5 col-start-1 row-start-6">
                             <Card className="h-14 bg-blue-50 dark:bg-gray-700">
-                                <p className="align-middle flex flex-row">
+                                <div className="align-middle flex flex-row">
                                     <BadgeInfo className="text-blue-600" />
                                     <p className="pl-4">
                                         This information is securely fatched
                                         from your Aadhar and cannot be modified
                                         .
                                     </p>
-                                </p>
+                                </div>
                             </Card>
                         </div>
                         <div className="col-start-3 row-start-7">
@@ -172,7 +158,6 @@ const MyProfile = ({ logOutUrl = '/' }) => {
                     </div>
                 </Card>
             </Container>
-            <HomeFooter mode={mode} />
         </main>
     )
 }

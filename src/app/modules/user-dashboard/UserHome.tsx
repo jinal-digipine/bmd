@@ -1,5 +1,3 @@
-import NavigationBar from './components/NavigationBar'
-import HomeFooter from './components/HomeFooter'
 import Services from './components/Services'
 import useDarkMode from '@/utils/hooks/useDarkMode'
 import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
@@ -14,12 +12,8 @@ const UserHome = () => {
     const schema = useThemeStore((state) => state.themeSchema)
     const setSchema = useThemeStore((state) => state.setSchema)
 
-    const toggleMode = () => {
-        setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
-    }
     return (
         <main className="px-4 lg:px-0 text-base">
-            <NavigationBar toggleMode={toggleMode} mode={mode} />
             <div className="relative">
                 <div
                     style={{
@@ -35,8 +29,6 @@ const UserHome = () => {
                     onModeChange={(value) => setMode(value ? 'dark' : 'light')}
                 />
             </div>
-
-            <HomeFooter mode={mode} />
         </main>
     )
 }

@@ -1,8 +1,4 @@
 import { Card } from '@/components/ui'
-import NavigationBar from './NavigationBar'
-import HomeFooter from './HomeFooter'
-import useDarkMode from '@/utils/hooks/useDarkMode'
-import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
 import Container from './HomeContainer'
 import { FileText } from 'lucide-react'
 import Table from '@/components/ui/Table'
@@ -11,21 +7,13 @@ import Pagination from '@/components/ui/Pagination'
 const { Tr, Td, TBody, THead, Th } = Table
 
 function MyApplications() {
-    const [isDark, setMode] = useDarkMode()
-
-    const mode = isDark ? MODE_DARK : MODE_LIGHT
-    const toggleMode = () => {
-        setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
-    }
     const onPaginationChange = (page: number) => {
         console.log('onPaginationChange', page)
     }
 
     return (
         <div>
-            <div className="mb-16">
-                <NavigationBar toggleMode={toggleMode} mode={mode} />
-            </div>
+            <div className="mb-16"></div>
             <Container className="mt-18 max-w-11xl px-10">
                 <div className="pt-14 pl-3">
                     <h2>My Applications</h2>
@@ -37,10 +25,10 @@ function MyApplications() {
                             <FileText className="h-10 w-10  text-blue-800" />
                         </div>
 
-                        <p className="pl-3">
+                        <div className="pl-3">
                             <h3>Application List</h3>
                             <p>Track the status of all your applications</p>
-                        </p>
+                        </div>
                     </div>
                     <Card className="mt-6">
                         <div>
@@ -99,7 +87,6 @@ function MyApplications() {
                     </Card>
                 </Card>
             </Container>
-            <HomeFooter mode={mode} />
         </div>
     )
 }

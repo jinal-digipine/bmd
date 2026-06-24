@@ -1,3 +1,3 @@
-import userHome from './UserHome'
+import UserHome from './UserHome'
 
-export default userHome
+export default UserHome

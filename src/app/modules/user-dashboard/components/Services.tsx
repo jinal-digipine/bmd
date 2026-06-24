@@ -39,9 +39,9 @@ const Card = ({
 }
 //
 const Services = ({
-    birthUrl = '/birth-form',
-    marriageUrl = '/marriage-form',
-    deathUrl = '/death-form',
+    birthUrl = '/user-home/birth-form',
+    marriageUrl = '/user-home/marriage-form',
+    deathUrl = '/user-home/death-form',
     myApplicationsUrl = '/user-home/my-applications',
 }) => {
     return (

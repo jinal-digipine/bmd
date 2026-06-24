@@ -8,7 +8,7 @@ const ForgotPasswordForm = () => {
     const [submitting, setSubmitting] = useState(false)
     const navigate = useNavigate()
 
-    const handleLoginClick = () => {
+    const handleSubmitClick = () => {
         navigate('/reset-password')
     }
     const onSubmit = (values) => {
@@ -30,7 +30,7 @@ const ForgotPasswordForm = () => {
                     variant="solid"
                     type="submit"
                     loading={submitting}
-                    onClick={handleLoginClick}
+                    onClick={handleSubmitClick}
                 >
                     Submit
                 </Button>
