@@ -20,9 +20,9 @@ const ForgotPasswordForm = () => {
     }
     return (
         <div>
-            <Form onSubmit={onSubmit}>
+            <Form className="w-xl" onSubmit={onSubmit}>
                 <FormItem asterisk label="Email">
-                    <Input type="email" placeholder="e.g. jin21@gmail.com" />
+                    <Input type="email" placeholder="e.g. john.doe@gmail.com" />
                 </FormItem>
 
                 <Button

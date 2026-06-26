@@ -1,20 +1,9 @@
 import ActionLink from '@/components/shared/ActionLink'
 import ResetPasswordForm from './components/ResetPasswordForm'
-import useDarkMode from '@/utils/hooks/useDarkMode'
-import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
-import Navigation from '../NavigationBar'
 
 export const ResetPasswordBase = ({ signInUrl = '/sign-in' }) => {
-    const [isDark, setMode] = useDarkMode()
-
-    const mode = isDark ? MODE_DARK : MODE_LIGHT
-
-    const toggleMode = () => {
-        setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
-    }
     return (
-        <div className=" w-120 overflow-auto mt-12 px-2">
-            <Navigation toggleMode={toggleMode} mode={mode} />
+        <div className="text-center flex flex-col gap-2 justify-center items-center h-[calc(100dvh)] bg-white">
             <div className="mb-6">
                 <div>
                     <h2 className="mb-1">Set new password</h2>

@@ -6,7 +6,8 @@ import { useAuth } from '@/auth'
 const { unAuthenticatedEntryPath } = appConfig
 
 const ProtectedRoute = () => {
-    const { authenticated } = useAuth()
+    const authenticated = true
+    // const { authenticated } = useAuth()
 
     const pathName = location.pathname
 

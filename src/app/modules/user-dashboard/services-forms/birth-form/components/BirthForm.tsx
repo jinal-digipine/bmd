@@ -30,7 +30,7 @@ const BirthForm = () => {
         }, 400)
     }
     return (
-        <div className=" mt-12 px-2 ">
+        <div className="max-w-6xl">
             <h2>Birth Application</h2>
 
             <Form onSubmit={onSubmit}>
@@ -49,7 +49,7 @@ const BirthForm = () => {
                         </div>
                         <div className="col-span-2 row-start-2">
                             <FormItem asterisk label="Date & Time of Birth">
-                                <DateTimepicker placeholder="pick a date and time" />
+                                <DateTimepicker placeholder="Pick a date and time" />
                             </FormItem>
                         </div>
                         <div className="col-span-2 col-start-3 row-start-2">

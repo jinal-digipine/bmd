@@ -39,7 +39,7 @@ const MarriageForm = () => {
     }
 
     return (
-        <div className="mt-12 px-2">
+        <div className="max-w-6xl">
             <div className="grid grid-cols-5 grid-rows-1 gap-4">
                 <div className="col-span-3">
                     <h2>Marriage Application</h2>
@@ -318,12 +318,12 @@ const MarriageForm = () => {
                         </div>
                         <div className="col-start-3">
                             <FormItem asterisk label="State">
-                                <Select placeholder="state" />
+                                <Select placeholder="Select State" />
                             </FormItem>
                         </div>
                         <div className="col-start-4">
                             <FormItem asterisk label="District">
-                                <Select placeholder="District" />
+                                <Select placeholder="Select District" />
                             </FormItem>
                         </div>
                     </div>
@@ -427,7 +427,7 @@ const MarriageForm = () => {
                         <div className="col-span-2 col-start-3 row-start-3">
                             <FormItem asterisk label="Gender">
                                 <Select
-                                    placeholder="choose Gender"
+                                    placeholder="Please Select"
                                     options={genders}
                                 />
                             </FormItem>

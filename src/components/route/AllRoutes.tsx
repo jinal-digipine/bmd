@@ -31,10 +31,10 @@ const AllRoutes = (props: AllRoutesProps) => {
     return (
         <Routes>
             <Route path="/app" element={<ProtectedRoute />}>
-                <Route
+                {/* <Route
                     path="/app"
                     element={<Navigate replace to={authenticatedEntryPath} />}
-                />
+                /> */}
                 {protectedRoutes.map((route, index) => (
                     <Route
                         key={route.key + index}
@@ -73,7 +73,7 @@ const AllRoutes = (props: AllRoutesProps) => {
                 ))}
             </Route>
 
-            <Route path="user-home">
+            {/* <Route path="user-home">
                 <Route element={<UserDashboardLayout />}>
                     <Route index element={<UserHome />} />
                     <Route path="my-profile" element={<MyProfile />} />
@@ -85,7 +85,7 @@ const AllRoutes = (props: AllRoutesProps) => {
                     <Route path="marriage-form" element={<Marriage />} />
                     <Route path="death-form" element={<Death />} />
                 </Route>
-            </Route>
+            </Route> */}
         </Routes>
     )
 }

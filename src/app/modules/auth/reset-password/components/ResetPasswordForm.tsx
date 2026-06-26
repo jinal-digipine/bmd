@@ -14,7 +14,7 @@ const ResetPasswordForm = () => {
         }, 400)
     }
     return (
-        <div>
+        <div className="w-xl">
             <Form onSubmit={onSubmit}>
                 <FormItem asterisk label="Password">
                     <PasswordInput

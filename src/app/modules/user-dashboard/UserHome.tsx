@@ -13,14 +13,8 @@ const UserHome = () => {
     const setSchema = useThemeStore((state) => state.setSchema)
 
     return (
-        <main className="px-4 lg:px-0 text-base">
+        <main className=" px-4 lg:px-0 text-base">
             <div className="relative">
-                <div
-                    style={{
-                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='50' height='50' fill='none' stroke='${mode === MODE_LIGHT ? 'rgb(0 0 0 / 0.04)' : 'rgb(255 255 255 / 0.04)'}'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
-                    }}
-                    className="absolute inset-0 [mask-image:linear-gradient(to_bottom,white_5%,transparent_70%)] pointer-events-none select-none"
-                ></div>
                 <HeroContent mode={mode} />
                 <Services
                     mode={mode}

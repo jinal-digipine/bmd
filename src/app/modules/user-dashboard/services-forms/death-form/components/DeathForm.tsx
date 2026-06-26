@@ -41,7 +41,7 @@ const DeathForm = () => {
         }, 400)
     }
     return (
-        <div className="mt-12 px-2">
+        <div className="max-w-6xl">
             <h2>Death Application</h2>
             <Form onSubmit={onSubmit}>
                 {/* SECTION : Deceased's information  */}
@@ -122,7 +122,7 @@ const DeathForm = () => {
                         <div className="col-start-6 row-start-2">
                             <FormItem asterisk label="Gender">
                                 <Select
-                                    placeholder="select gender"
+                                    placeholder="Please Select"
                                     options={genders}
                                 />
                             </FormItem>
@@ -274,7 +274,7 @@ const DeathForm = () => {
                         <div className="col-span-2 col-start-5 row-start-2">
                             <FormItem asterisk label="Gender">
                                 <Select
-                                    placeholder="select gender"
+                                    placeholder="Please Select"
                                     options={genders}
                                 />
                             </FormItem>

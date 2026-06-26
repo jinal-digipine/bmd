@@ -13,15 +13,15 @@ import {
 } from 'lucide-react'
 import { ActionLink } from '@/components/shared'
 
-const MyProfile = ({ logOutUrl = '/' }) => {
+const logOutUrl = '/'
+
+function MyProfile() {
     return (
         <main>
             <div className="mb-16"></div>
-            <Container className="mt-18 max-w-11xl px-10">
-                <div className="">
-                    <h2>My Profile</h2>
-                    <p>View Your Personal Information</p>
-                </div>
+            <Container className="max-w-7xl">
+                <h2>My Profile</h2>
+                <p>View Your Personal Information</p>
                 <Card className="mt-4 px-6 bg-blue-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
                     <div className="grid grid-cols-2 grid-rows-1 gap-4">
                         <div>
@@ -114,7 +114,7 @@ const MyProfile = ({ logOutUrl = '/' }) => {
                             </Card>
                         </div>
                         <div className="col-start-3 row-start-7">
-                            <ActionLink to={logOutUrl} themeColor={false}>
+                            <ActionLink themeColor={false} to={logOutUrl}>
                                 <Button className="text-red-700 border-red-700 justify-items-center">
                                     <div className="flex flex-row">
                                         <LogOut />

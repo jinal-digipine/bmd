@@ -4,7 +4,7 @@ import { ShieldCheck, Globe, ListChecks, Headset } from 'lucide-react'
 
 const HeroContent = () => {
     return (
-        <Card className="bg-blue-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 backdrop-brightness-75  mt-30 mx-6 ">
+        <Card className="bg-blue-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 backdrop-brightness-75  mt-10 mx-6 ">
             <div className="grid grid-cols-6 grid-rows-3 gap-1">
                 <div className="col-span-4 row-span-2">
                     <div className="max-w-11xl mx-auto px-4 flex  flex-col mt-6  justify-between">

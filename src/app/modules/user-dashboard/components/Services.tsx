@@ -5,10 +5,12 @@ import { ActionLink } from '@/components/shared'
 import { TbCircleCheck } from 'react-icons/tb'
 import { MoveRight, Route } from 'lucide-react'
 import { Button } from '@/components/ui'
-import BabyIcon from '@iconify-react/lucide/baby'
-import LoveFillIcon from '@iconify-react/mingcute/love-fill'
-import FlowerTulipDuotoneIcon from '@iconify-react/ph/flower-tulip-duotone'
-import FileCheckOutlineIcon from '@iconify-react/mdi/file-check-outline'
+import {
+    PiBabyDuotone,
+    PiFlowerTulipDuotone,
+    PiHeartDuotone,
+} from 'react-icons/pi'
+import { LuFileCheck2 } from 'react-icons/lu'
 
 type CardProps = HTMLMotionProps<'div'>
 
@@ -39,19 +41,19 @@ const Card = ({
 }
 //
 const Services = ({
-    birthUrl = '/user-home/birth-form',
-    marriageUrl = '/user-home/marriage-form',
-    deathUrl = '/user-home/death-form',
-    myApplicationsUrl = '/user-home/my-applications',
+    birthUrl = '/app/forms/birth',
+    marriageUrl = '/app/forms/marriage',
+    deathUrl = '/app/forms/death',
+    myApplicationsUrl = '/app/applications',
 }) => {
     return (
         <div id="features" className="relative z-20 pt-2 md:pt-2">
             <Container className="max-w-11xl mx-auto px-7 flex  flex-col mt-2  justify-between">
                 <div className="relative z-20 py-4 md:py-2">
-                    <h2 className="py-4  px-2 hover:text-blue-900 ">
+                    <h2 className="pt-4 pb-1   hover:text-blue-900 ">
                         Citizen Services
                     </h2>
-                    <p className="px-4">Choose service to get started</p>
+                    <p className="px-2">Choose service to get started</p>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-2">
                         <Card
@@ -69,10 +71,7 @@ const Services = ({
                             <div className="flex flex-col h-full gap-4">
                                 <div className="col-span-1 row-span-3">
                                     <div className="flex justify-center items-center w-22 h-22 bg-green-50 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:scale-105 transition-transform duration-100 ">
-                                        <BabyIcon
-                                            height="3em"
-                                            style={{ color: '#19991f' }}
-                                        />
+                                        <PiBabyDuotone className="h-16 w-16 text-green-700" />
                                     </div>
                                 </div>
                                 <div className="col-span-3 row-start-4">
@@ -133,10 +132,7 @@ const Services = ({
                             <div className="flex flex-col h-full gap-4">
                                 <div className="col-span-1 row-span-3">
                                     <div className="flex justify-center items-center w-22 h-22 bg-orange-50  rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:scale-105 transition-transform duration-100 ">
-                                        <LoveFillIcon
-                                            height="3em"
-                                            style={{ color: '#ce630f' }}
-                                        />
+                                        <PiHeartDuotone className="h-16 w-16 text-orange-700" />
                                     </div>
                                 </div>
                                 <div className="col-span-3 row-start-4">
@@ -199,10 +195,7 @@ const Services = ({
                             <div className="flex flex-col h-full gap-4">
                                 <div className="col-span-1 row-span-3">
                                     <div className="flex justify-center items-center w-22 h-22 bg-purple-50 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)] hover:scale-105 transition-transform duration-100 ">
-                                        <FlowerTulipDuotoneIcon
-                                            height="3em"
-                                            style={{ color: '#6012ab' }}
-                                        />
+                                        <PiFlowerTulipDuotone className="h-16 w-16 text-purple-700" />
                                     </div>
                                 </div>
                                 <div className="col-span-3 row-start-4">
@@ -253,24 +246,19 @@ const Services = ({
                     </div>
                 </div>
                 <Card className="mt-14 bg-blue-100">
-                    <div className="grid grid-cols-12 grid-rows-1 gap-4">
-                        <div className="pl-12 pt-1">
-                            <FileCheckOutlineIcon
-                                height="3em"
-                                style={{
-                                    color: '#1f2cd6',
-                                }}
-                            />
+                    <div className="grid grid-cols-20 grid-rows-1 gap-1">
+                        <div className="pl-4">
+                            <LuFileCheck2 className="w-14 h-16 text-blue-700" />
                         </div>
-                        <div className="col-span-5">
+                        <div className="col-span-8 col-start-2">
                             <h5>Track My Application</h5>
                             <p className="text-sm">
                                 Monitor your application status and stay updated
                                 on every step of the process.
                             </p>
                         </div>
-                        <div className="col-span-2 col-start-11">
-                            <div className="flex items-center gap-2 justify-self-end justify-center">
+                        <div className="col-span-2 col-start-17 flex items-center ">
+                            <div className="">
                                 <ActionLink
                                     to={myApplicationsUrl}
                                     themeColor={false}

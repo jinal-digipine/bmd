@@ -13,16 +13,15 @@ function MyApplications() {
 
     return (
         <div>
-            <div className="mb-16"></div>
-            <Container className="mt-18 max-w-11xl px-10">
-                <div className="pt-14 pl-3">
+            <Container className="max-w-9xl">
+                <div className="">
                     <h2>My Applications</h2>
                     <p>View and track all your submitted applications</p>
                 </div>
                 <Card className="mt-6">
                     <div className="flex flex-row">
                         <div className="flex justify-center items-center h-12 w-12 bg-blue-100 dark:bg-gray-400 rounded-2xl ">
-                            <FileText className="h-10 w-10  text-blue-800" />
+                            <FileText className="h-10 w-10  text-blue-700" />
                         </div>
 
                         <div className="pl-3">

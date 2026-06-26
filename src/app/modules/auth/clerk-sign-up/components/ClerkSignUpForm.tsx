@@ -5,7 +5,7 @@ import { FormItem, Form } from '@/components/ui/Form'
 import Select from '@/components/ui/Select'
 import OtpInput from '@/components/shared/OtpInput'
 import { HiOutlineUser } from 'react-icons/hi'
-import { genders } from '@/app/common/optionslist/genders'
+import { genders } from '@/app/common/components/gender-list/genders'
 //icon import
 import { BiCheckShield } from 'react-icons/bi'
 //otp imports
@@ -16,8 +16,6 @@ import Upload from '@/components/ui/Upload'
 const SignUpForm = () => {
     const [submitting, setSubmitting] = useState(false)
 
-    //password visible-notvisible
-
     const onSubmit = (values) => {
         setSubmitting(true)
         setTimeout(() => {
@@ -27,15 +25,15 @@ const SignUpForm = () => {
     }
 
     return (
-        <Form onSubmit={onSubmit}>
-            <div className="md:flex gap-2 ">
+        <Form className="w-xl" onSubmit={onSubmit}>
+            <div className="flex flex-row gap-2">
                 <FormItem asterisk label="Aadhar Id">
                     <Input
                         type="text"
                         prefix={<HiOutlineUser className="text-lg" />}
                         placeholder="e.g. 1234 1234 1234"
                         autoComplete="off"
-                        className="w-93"
+                        className="w-[calc(50dvh)]"
                     />
                 </FormItem>
                 <Button variant="solid" type="button" className="mt-7">
@@ -43,9 +41,9 @@ const SignUpForm = () => {
                 </Button>
             </div>
             {/* OTP field */}
-            <div>
-                <div className="mb-8">
-                    <h6 className="mb-2">OTP Verification</h6>
+            <div className="flex flex-col gap-2 justify-center items-center">
+                <div>
+                    <h6 className="mb-0">OTP Verification</h6>
                     <p>We have sent you One Time Password to your email.</p>
                 </div>
                 <div className="flex gap-2">
@@ -60,7 +58,7 @@ const SignUpForm = () => {
                         <BiCheckShield className="h-7 w-5" />
                     </Button>
                 </div>
-                <div className="mt-4 text-center">
+                <div className="text-center">
                     <span className="font-semibold">
                         Didn&apos;t receive OTP?{' '}
                     </span>
@@ -77,7 +75,7 @@ const SignUpForm = () => {
                 label="Select Your Working Locations"
                 className="mt-2"
             >
-                <div className="flex gap-2 ">
+                <div className="flex gap-2  justify-evenly ">
                     <Select placeholder="Select District" />
                     <Select placeholder="Select Office" />
                     <Select placeholder="Select Department" />
@@ -92,16 +90,15 @@ const SignUpForm = () => {
                     />
                 </div>
             </FormItem>
-
             <FormItem asterisk label="User name">
                 <Input
                     type="text"
-                    placeholder="e.g. Jin Patel"
+                    placeholder="e.g. John Doe"
                     autoComplete="off"
                 />
             </FormItem>
             <FormItem asterisk label="Gender">
-                <Select placeholder="Please Select" options={genders} />
+                <Select placeholder="Please Select gender" options={genders} />
             </FormItem>
             <FormItem asterisk label="DOB">
                 <DatePicker type="date" />
@@ -110,21 +107,16 @@ const SignUpForm = () => {
                 <Input type="text" placeholder="e.g. 9876645633" />
             </FormItem>
             <FormItem asterisk label="Email">
-                <Input type="email" placeholder="e.g. jin21@gmail.com" />
+                <Input type="email" placeholder="e.g. john.doe@gmail.com" />
             </FormItem>
-
-            <FormItem asterisk label="Aadhar card: " className="flex-row ">
-                <Upload className="pl-20" />
+            <FormItem asterisk label="Aadhar card: ">
+                <Upload draggable />
             </FormItem>
-            <FormItem asterisk label="Signature:" className="flex-row ">
-                <Upload className="pl-24" />
+            <FormItem asterisk label="Signature:">
+                <Upload draggable />
             </FormItem>
-            <FormItem
-                asterisk
-                label="GOV Employee Id Card:"
-                className="flex-row "
-            >
-                <Upload className="pl-3" />
+            <FormItem asterisk label="GOV Employee Id Card:">
+                <Upload draggable />
             </FormItem>
 
             <Button block variant="solid" type="submit" loading={submitting}>

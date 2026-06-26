@@ -15,13 +15,15 @@ const SignInForm = () => {
         }, 400)
     }
     return (
-        <Form onSubmit={onSubmit}>
+        <Form className="w-xl" onSubmit={onSubmit}>
             <FormItem asterisk label="Email">
-                <Input type="email" placeholder="e.g. jin21@gmail.com" />
+                <Input type="email" placeholder="e.g. john.doe@gmail.com" />
             </FormItem>
+
             <FormItem asterisk label="Password">
                 <PasswordInput type="text" placeholder="Enter Your Password" />
             </FormItem>
+
             <Button block variant="solid" type="submit" loading={submitting}>
                 Sign In
             </Button>

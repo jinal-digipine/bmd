@@ -14,13 +14,13 @@ const authRoute: Routes = [
         component: lazy(() => import('@/app/modules/auth/sign-up')),
         authority: [],
     },
-    //clerk page testing purpose only
-    // {
-    //     key: 'signUp',
-    //     path: `/sign-up`,
-    //     component: lazy(() => import('@/app/modules/auth/clerk-sign-up')),
-    //     authority: [],
-    // },
+    // clerk page testing purpose only
+    {
+        key: 'signUp',
+        path: `/clerk-sign-up`,
+        component: lazy(() => import('@/app/modules/auth/clerk-sign-up')),
+        authority: [],
+    },
 
     {
         key: 'resetPassword',
