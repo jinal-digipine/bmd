@@ -1,19 +1,21 @@
 import ActionLink from '@/components/shared/ActionLink'
-import ResetPasswordForm from './components/ResetPasswordForm'
 
-export const ResetPasswordBase = ({ signInUrl = '/sign-in' }) => {
+import ForgotPasswordForm from './components/ForgotPasswordForm'
+
+export const ForgotPasswordBase = ({ signInUrl = '/sign-in' }) => {
     return (
         <div className="text-center flex flex-col gap-2 justify-center items-center h-[calc(100dvh)] bg-white">
             <div className="mb-6">
                 <div>
-                    <h2 className="mb-1">Set new password</h2>
+                    <h2 className="mb-1">Forgot password</h2>
                     <p className="font-semibold heading-text">
-                        Your new password must different from previous password
+                        Please enter your registered email to receive
+                        verification code.
                     </p>
                 </div>
             </div>
 
-            <ResetPasswordForm />
+            <ForgotPasswordForm />
 
             <div className="mt-4 text-center">
                 <span>Back to </span>
@@ -29,8 +31,8 @@ export const ResetPasswordBase = ({ signInUrl = '/sign-in' }) => {
     )
 }
 
-const ResetPassword = () => {
-    return <ResetPasswordBase />
+const ForgotPassword = () => {
+    return <ForgotPasswordBase />
 }
 
-export default ResetPassword
+export default ForgotPassword

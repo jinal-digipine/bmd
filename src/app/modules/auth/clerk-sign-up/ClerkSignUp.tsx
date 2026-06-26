@@ -1,25 +1,12 @@
 import SignUpForm from './components/ClerkSignUpForm'
-import Navigation from '../NavigationBar'
-import useDarkMode from '@/utils/hooks/useDarkMode'
-import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
-import ActionLink from '@/components/shared/ActionLink'
 
-export const SignUpBase = ({ signInUrl = '/sign-in' }) => {
-    const [isDark, setMode] = useDarkMode()
-
-    const mode = isDark ? MODE_DARK : MODE_LIGHT
-
-    const toggleMode = () => {
-        setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
-    }
-
+export const SignUpBase = () => {
     return (
-        <div className="h-150 w-120 overflow-auto mt-12 px-2">
-            <Navigation toggleMode={toggleMode} mode={mode} />
-
-            <div className="mb-8 ">
-                <h2 className="mb-1">Create Clerk</h2>
-            </div>
+        <div className="text-center flex flex-col gap-2 justify-center items-center py-4 bg-white">
+            <h2 className="mb-1">Create Clerk</h2>
+            <p className="font-semibold heading-text">
+                Please fill the form to create a Clerk!
+            </p>
 
             <SignUpForm />
         </div>

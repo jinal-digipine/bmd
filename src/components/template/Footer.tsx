@@ -2,6 +2,7 @@ import Container from '@/components/shared/Container'
 import classNames from '@/utils/classNames'
 import { APP_NAME } from '@/constants/app.constant'
 import { PAGE_CONTAINER_GUTTER_X } from '@/constants/theme.constant'
+import logo from '../../assets/images/logobmd.png'
 
 export type FooterPageContainerType = 'gutterless' | 'contained'
 
@@ -17,6 +18,10 @@ const FooterContent = () => {
                 Copyright &copy; {`${new Date().getFullYear()}`}{' '}
                 <span className="font-semibold">{`${APP_NAME}`}</span> All
                 rights reserved.
+                <span>
+                    {' '}
+                    Government of Gujarat | Digital Civil Registration Services
+                </span>
             </span>
             <div className="">
                 <a

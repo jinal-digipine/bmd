@@ -40,15 +40,15 @@ const SignUpForm = () => {
     }
     return (
         <div>
-            <Form onSubmit={onSubmit}>
-                <div className="md:flex  gap-2">
+            <Form className="w-xl" onSubmit={onSubmit}>
+                <div className="flex flex-row gap-2">
                     <FormItem asterisk label="Aadhar Id">
                         <Input
                             type="text"
                             prefix={<HiOutlineUser className="text-lg" />}
                             placeholder="e.g. 1234 1234 1234"
                             autoComplete="off"
-                            className="w-93"
+                            className="w-[calc(50dvh)]"
                         />
                     </FormItem>
                     <Button variant="solid" type="button" className="mt-7">
@@ -56,16 +56,16 @@ const SignUpForm = () => {
                     </Button>
                 </div>
                 {/* OTP field */}
-                <div>
-                    <div className="mb-8">
-                        <h6 className="mb-2">OTP Verification</h6>
+                <div className="flex flex-col gap-2 justify-center items-center">
+                    <div className="mb-2">
+                        <h6>OTP Verification</h6>
                         <p>We have sent you OTP to your email.</p>
                     </div>
                     <div className="flex gap-2">
                         <FormItem>
                             <OtpInput
                                 placeholder=""
-                                inputClass="h-[58px]"
+                                inputClass="h-[58px] "
                                 length={6}
                             />
                         </FormItem>
@@ -85,11 +85,10 @@ const SignUpForm = () => {
                         </button>
                     </div>
                 </div>
-
                 <FormItem asterisk label="User name">
                     <Input
                         type="text"
-                        placeholder="e.g. Jin Patel"
+                        placeholder="e.g. John Doe"
                         autoComplete="off"
                     />
                 </FormItem>
@@ -97,7 +96,7 @@ const SignUpForm = () => {
                     <Input type="text" placeholder="e.g. 9876645633" />
                 </FormItem>
                 <FormItem asterisk label="Email">
-                    <Input type="email" placeholder="e.g. jin21@gmail.com" />
+                    <Input type="email" placeholder="e.g. john.doe@gmail.com" />
                 </FormItem>
                 <FormItem asterisk label="Password">
                     <Input
