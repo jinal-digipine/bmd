@@ -313,7 +313,7 @@ const DeathApplication = () => {
                         <img
                             src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                     <div className="flex justify-between items-center mb-2">
@@ -327,7 +327,7 @@ const DeathApplication = () => {
                         <img
                             // src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                     <div className="flex justify-between items-center mb-2">
@@ -341,7 +341,7 @@ const DeathApplication = () => {
                         <img
                             // src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                     <div className="flex justify-between items-center mb-2">
@@ -355,7 +355,7 @@ const DeathApplication = () => {
                         <img
                             // src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                     <div className="flex justify-between items-center mb-2">
@@ -369,7 +369,7 @@ const DeathApplication = () => {
                         <img
                             // src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                     <div className="flex justify-between items-center mb-2">
@@ -383,7 +383,7 @@ const DeathApplication = () => {
                         <img
                             // src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                     <div className="flex justify-between items-center mb-2">
@@ -397,7 +397,7 @@ const DeathApplication = () => {
                         <img
                             // src={adhar}
                             alt={adhar}
-                            className="w-full object-contain max-h-[900px]"
+                            className="w-full object-contain max-h-[600px]"
                         />
                     </div>
                 </Card>
