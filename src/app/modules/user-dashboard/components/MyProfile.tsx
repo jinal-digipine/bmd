@@ -22,54 +22,7 @@ function MyProfile() {
             <Container className="max-w-full">
                 <div className="grid grid-cols-5 grid-rows-5 gap-4">
                     <div className="row-span-5">
-                        {/* <Card className="">
-                            <div className="grid grid-cols-1 grid-rows-6 gap-0">
-                                <div className="row-span-1 row-start-1 flex justify-center items-end mt-4">
-                                    <div className="flex justify-center items-center w-18 h-18 bg-blue-50 rounded-full  ">
-                                        <HiUser className="h-16 w-16 text-blue-500 " />
-                                    </div>
-                                </div>
-                                <div className="row-start-2 flex justify-center items-center">
-                                    <h3 className="flex justify-center items-center">
-                                        John Doe
-                                    </h3>
-                                </div>
-                                <div className="row-start-3 ">
-                                    <div className="flex justify-center items-start">
-                                        <p className="bg-green-50 text-green-600 font-semibold dark:bg-green-500 px-2 rounded-lg mb-2">
-                                            Aadhar Verified
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="row-span-1 row-start-4 flex justify-center items-center">
-                                    <div className="flex flex-row justify-center items-center bg-blue-50 rounded-4xl h-12 w-12 ">
-                                        <PiShieldCheckDuotone className="h-8 w-8 text-blue-500" />
-                                    </div>
-                                </div>
-                                <div className="row-start-5 flex flex-col justify-evenly items-center ">
-                                    <p>Your identity has been verified</p>
-                                    <p>using Aadhar. Profile details are</p>
-                                    <p>fetched from UIDAI records.</p>
-                                </div>
-                                <div className="row-start-6 flex justify-center items-center">
-                                    <ActionLink
-                                        to={logOutUrl}
-                                        themeColor={false}
-                                        className=" mt-0"
-                                    >
-                                        <Button className="text-red-600  border-red-700  dark:text-red-500  justify-items-center">
-                                            <div className="flex flex-row ">
-                                                <LogOut />
-                                                SignOut
-                                            </div>
-                                        </Button>
-                                    </ActionLink>
-                                </div>
-                            </div>
-                        </Card> */}
                         <Card className="">
-                            {/* <div className="grid grid-cols-1 grid-rows-6 gap-0"> */}
                             <div className="flex justify-center items-end mt-4">
                                 <div className="flex justify-center items-center w-18 h-18 bg-blue-50 rounded-full  ">
                                     <HiUser className="h-12 w-12 text-blue-500 " />
@@ -114,7 +67,6 @@ function MyProfile() {
                                     </Button>
                                 </ActionLink>
                             </div>
-                            {/* </div> */}
                         </Card>
                     </div>
                     <div className="col-span-4 row-span-5">
