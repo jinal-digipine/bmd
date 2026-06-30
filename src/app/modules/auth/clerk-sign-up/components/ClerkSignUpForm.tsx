@@ -33,7 +33,7 @@ const SignUpForm = () => {
                         prefix={<HiOutlineUser className="text-lg" />}
                         placeholder="e.g. 1234 1234 1234"
                         autoComplete="off"
-                        className="w-[calc(50dvh)]"
+                        className="w-[calc(60dvh)]"
                     />
                 </FormItem>
                 <Button variant="solid" type="button" className="mt-7">
