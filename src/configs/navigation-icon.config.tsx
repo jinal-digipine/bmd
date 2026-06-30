@@ -4,8 +4,11 @@ import {
     PiHeartDuotone,
     PiBedDuotone,
     PiHandshakeDuotone,
+    PiUserCircleDuotone,
+    PiUserListDuotone,
 } from 'react-icons/pi'
 import type { JSX } from 'react'
+import { HiHome } from 'react-icons/hi'
 
 export type NavigationIcons = Record<string, JSX.Element>
 
@@ -15,6 +18,9 @@ const navigationIcon: NavigationIcons = {
     birth: <PiBabyCarriageDuotone />,
     marriage: <PiHeartDuotone />,
     death: <PiBedDuotone />,
+    user: <PiUserCircleDuotone />,
+    clerk: <PiUserListDuotone />,
+    home: <HiHome />,
 }
 
 export default navigationIcon

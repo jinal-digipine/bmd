@@ -16,13 +16,19 @@ export const publicRoutes: Routes = [
 export const protectedRoutes: Routes = [
     {
         key: 'dashboard',
-        path: '',
+        path: 'user-dashboard',
         component: lazy(() => import('@/app/modules/user-dashboard')),
         authority: [],
     },
     {
-        key: 'applications',
-        path: 'applications',
+        key: 'dashboard',
+        path: 'clerk-dashboard',
+        component: lazy(() => import('@/app/modules/clerk-dashboard')),
+        authority: [],
+    },
+    {
+        key: 'user.applications',
+        path: 'user/applications',
         component: lazy(
             () =>
                 import(
@@ -32,10 +38,29 @@ export const protectedRoutes: Routes = [
         authority: [],
     },
     {
+        key: 'clerk.applications',
+        path: 'clerk/applications',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/components/RecievedApplications'
+                ),
+        ),
+        authority: [],
+    },
+    {
         key: 'user.profile',
-        path: 'profile',
+        path: 'user/profile',
         component: lazy(
             () => import('@/app/modules/user-dashboard/components/MyProfile'),
+        ),
+        authority: [],
+    },
+    {
+        key: 'clerk.profile',
+        path: 'clerk/profile',
+        component: lazy(
+            () => import('@/app/modules/clerk-dashboard/components/MyProfile'),
         ),
         authority: [],
     },
@@ -46,6 +71,72 @@ export const protectedRoutes: Routes = [
             () =>
                 import(
                     '@/app/modules/user-dashboard/services-forms/birth-form'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'action-forms-birth',
+        path: 'clerk/action/forms/birth',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/actions/edit-birth/BirthForm'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'action-forms-marriage',
+        path: 'clerk/action/forms/marriage',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/actions/edit-marriage/MarriageForm'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'action-forms-death',
+        path: 'clerk/action/forms/death',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/actions/edit-death/DeathForm'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'action-view-birth',
+        path: 'clerk/action/view/birth',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/actions/view-birth/BirthApplication'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'action-view-marriage',
+        path: 'clerk/action/view/marriage',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/actions/view-marriage/MarriageApplication'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'action-view-death',
+        path: 'clerk/action/view/death',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/clerk-dashboard/actions/view-death/DeathApplication'
                 ),
         ),
         authority: [],
