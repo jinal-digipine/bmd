@@ -109,6 +109,17 @@ const SignUpForm = () => {
             <FormItem asterisk label="Email">
                 <Input type="email" placeholder="e.g. john.doe@gmail.com" />
             </FormItem>
+            <div className="flex flex-row w-full space-x-12">
+                <FormItem asterisk label="State">
+                    <Select placeholder="Select State " />
+                </FormItem>
+                <FormItem asterisk label="District">
+                    <Select placeholder="Select District  " />
+                </FormItem>
+                <FormItem asterisk label="Office">
+                    <Select placeholder="Select Office  " />
+                </FormItem>
+            </div>
             <FormItem asterisk label="Aadhar card: ">
                 <Upload draggable />
             </FormItem>
