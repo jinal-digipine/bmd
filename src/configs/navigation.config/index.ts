@@ -210,6 +210,16 @@ const navigationConfig: NavigationTree[] = [
                 authority: [],
                 subMenu: [],
             },
+            {
+                key: 'admin.holidays',
+                path: '/app/admin/holidays-page ',
+                title: 'Holidays',
+                translateKey: 'nav.collapseMenu.item2',
+                icon: 'holidays',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: [],
+            },
         ],
     },
 

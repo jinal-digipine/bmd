@@ -224,6 +224,15 @@ export const protectedRoutes: Routes = [
         ),
         authority: [],
     },
+    {
+        key: 'admin.holidays',
+        path: 'admin/holidays-page',
+        component: lazy(
+            () =>
+                import('@/app/modules/admin-dashboard/components/HolidayPage'),
+        ),
+        authority: [],
+    },
     //actions path from admin dashboard
 
     {
@@ -262,6 +271,17 @@ export const protectedRoutes: Routes = [
             () =>
                 import(
                     '@/app/modules/admin-dashboard/actions/add-office/AddOffice'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.add.holiday',
+        path: 'admin/action/add-holiday',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/admin-dashboard/actions/add-holiday/AddHoliday'
                 ),
         ),
         authority: [],
