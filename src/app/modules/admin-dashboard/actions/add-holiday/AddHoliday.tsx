@@ -35,27 +35,27 @@ const AddHoliday = () => {
                 <h5 className="mb-4">Add New Holiday</h5>
 
                 <Form>
-                    <FormItem label="Holiday Name">
+                    <FormItem asterisk label="Holiday Name">
                         <Input
                             type="text"
                             placeholder="e.g. Diwali"
                             autoComplete="off"
                         />
                     </FormItem>
-                    <FormItem label="Description">
+                    <FormItem asterisk label="Description">
                         <Input
                             type="text"
                             placeholder="e.g. The Festival of Joy and FireCrackers."
                             autoComplete="off"
                         />
                     </FormItem>
-                    <FormItem label="Date of Holiday">
+                    <FormItem asterisk label="Date of Holiday">
                         <DatePicker placeholder="Pick a date" />
                     </FormItem>
-                    <FormItem>
+                    <FormItem asterisk>
                         <Select placeholder="National Holidays" />
                     </FormItem>
-                    <FormItem>
+                    <FormItem asterisk>
                         <Select placeholder="Office" />
                     </FormItem>
                 </Form>
