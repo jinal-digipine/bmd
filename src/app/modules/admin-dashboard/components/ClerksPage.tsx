@@ -23,12 +23,10 @@ const ClerkPage = () => {
     }
 
     const onDialogClose = (e: MouseEvent) => {
-        console.log('onDialogClose', e)
         setIsOpen(false)
     }
 
     const onDialogOk = (e: MouseEvent) => {
-        console.log('onDialogOk', e)
         setIsOpen(false)
     }
 

@@ -12,13 +12,11 @@ const AddHoliday = () => {
     const navigate = useNavigate()
 
     const onDialogClose = (e: MouseEvent) => {
-        console.log('onDialogClose', e)
         setIsOpen(false)
         navigate('/app/admin/holidays-page')
     }
 
     const onDialogOk = (e: MouseEvent) => {
-        console.log('onDialogOk', e)
         setIsOpen(false)
         navigate('/app/admin/holidays-page')
     }

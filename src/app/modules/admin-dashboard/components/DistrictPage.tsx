@@ -42,9 +42,6 @@ const DistrictPage = () => {
                                 <p>Total Districts</p>
                                 <h6>33</h6>
                             </div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
                         </div>
                     </Card>
 
