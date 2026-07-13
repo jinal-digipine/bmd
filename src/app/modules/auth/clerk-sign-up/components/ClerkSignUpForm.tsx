@@ -33,7 +33,7 @@ const SignUpForm = () => {
                         prefix={<HiOutlineUser className="text-lg" />}
                         placeholder="e.g. 1234 1234 1234"
                         autoComplete="off"
-                        className="w-[calc(50dvh)]"
+                        className="w-[calc(60dvh)]"
                     />
                 </FormItem>
                 <Button variant="solid" type="button" className="mt-7">
@@ -109,6 +109,17 @@ const SignUpForm = () => {
             <FormItem asterisk label="Email">
                 <Input type="email" placeholder="e.g. john.doe@gmail.com" />
             </FormItem>
+            <div className="flex flex-row w-full space-x-12">
+                <FormItem asterisk label="State">
+                    <Select placeholder="Select State " />
+                </FormItem>
+                <FormItem asterisk label="District">
+                    <Select placeholder="Select District  " />
+                </FormItem>
+                <FormItem asterisk label="Office">
+                    <Select placeholder="Select Office  " />
+                </FormItem>
+            </div>
             <FormItem asterisk label="Aadhar card: ">
                 <Upload draggable />
             </FormItem>

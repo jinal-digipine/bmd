@@ -15,15 +15,23 @@ export const publicRoutes: Routes = [
 
 export const protectedRoutes: Routes = [
     {
-        key: 'dashboard',
+        key: 'user.dashboard',
         path: 'user-dashboard',
         component: lazy(() => import('@/app/modules/user-dashboard')),
         authority: [],
     },
     {
-        key: 'dashboard',
+        key: 'clerk.dashboard',
         path: 'clerk-dashboard',
         component: lazy(() => import('@/app/modules/clerk-dashboard')),
+        authority: [],
+    },
+    {
+        key: 'admin.dashboard',
+        path: 'admin-dashboard',
+        component: lazy(
+            () => import('@/app/modules/admin-dashboard/AdminHome'),
+        ),
         authority: [],
     },
     {
@@ -61,6 +69,14 @@ export const protectedRoutes: Routes = [
         path: 'clerk/profile',
         component: lazy(
             () => import('@/app/modules/clerk-dashboard/components/MyProfile'),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.profile',
+        path: 'admin/profile',
+        component: lazy(
+            () => import('@/app/modules/admin-dashboard/components/MyProfile'),
         ),
         authority: [],
     },
@@ -159,6 +175,113 @@ export const protectedRoutes: Routes = [
             () =>
                 import(
                     '@/app/modules/user-dashboard/services-forms/death-form'
+                ),
+        ),
+        authority: [],
+    },
+    //admin pages
+
+    {
+        key: 'admin.states',
+        path: 'admin/states-page',
+        component: lazy(
+            () => import('@/app/modules/admin-dashboard/components/StatesPage'),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.districts',
+        path: 'admin/districts-page',
+        component: lazy(
+            () =>
+                import('@/app/modules/admin-dashboard/components/DistrictPage'),
+        ),
+        authority: [],
+    },
+
+    {
+        key: 'admin.offices',
+        path: 'admin/offices-page',
+        component: lazy(
+            () =>
+                import('@/app/modules/admin-dashboard/components/OfficesPage'),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.clerks',
+        path: 'admin/clerks-page',
+        component: lazy(
+            () => import('@/app/modules/admin-dashboard/components/ClerksPage'),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.users',
+        path: 'admin/users-page',
+        component: lazy(
+            () => import('@/app/modules/admin-dashboard/components/UsersPage'),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.holidays',
+        path: 'admin/holidays-page',
+        component: lazy(
+            () =>
+                import('@/app/modules/admin-dashboard/components/HolidayPage'),
+        ),
+        authority: [],
+    },
+    //actions path from admin dashboard
+
+    {
+        key: 'admin.add.clerk',
+        path: 'admin/action/clerk-signup',
+        component: lazy(() => import('@/app/modules/auth/clerk-sign-up')),
+        authority: [],
+    },
+
+    {
+        key: 'admin.add.state',
+        path: 'admin/action/add-state',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/admin-dashboard/actions/add-state/AddState'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.add.district',
+        path: 'admin/action/add-district',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/admin-dashboard/actions/add-district/AddDistrict'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.add.office',
+        path: 'admin/action/add-office',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/admin-dashboard/actions/add-office/AddOffice'
+                ),
+        ),
+        authority: [],
+    },
+    {
+        key: 'admin.add.holiday',
+        path: 'admin/action/add-holiday',
+        component: lazy(
+            () =>
+                import(
+                    '@/app/modules/admin-dashboard/actions/add-holiday/AddHoliday'
                 ),
         ),
         authority: [],
