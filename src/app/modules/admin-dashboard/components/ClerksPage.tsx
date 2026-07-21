@@ -1,4 +1,4 @@
-import { Button, Card, Select } from '@/components/ui'
+import { Button, Card, Notification, Select, toast } from '@/components/ui'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import { AdaptiveCard, Container, DebouceInput } from '@/components/shared'
@@ -7,17 +7,49 @@ import { FiPlus } from 'react-icons/fi'
 import { useNavigate } from 'react-router'
 import Dialog from '@/components/ui/Dialog'
 import type { MouseEvent } from 'react'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { User } from '@/app/@api/user/user.types'
+import { ClerkListApis } from '@/app/@api/user/clerkList.api'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 const ClerkPage = () => {
     const navigate = useNavigate()
     const [dialogIsOpen, setIsOpen] = useState(false)
+    const [clerks, setClerks] = useState<User.Detail[]>([])
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [totalItems, setTotalItems] = useState<number>(10)
+    const [search, setSearch] = useState<string>('')
 
     const onPaginationChange = (page: number) => {
-        console.log('onPaginationChange', page)
+        setCurrentPage(page)
     }
+
+    const fetchClerkData = useCallback(
+        async (page: number, limit: number, search?: string) => {
+            try {
+                const response = await ClerkListApis.list(page, limit, search)
+                setClerks(response.data)
+                setTotalItems(totalItems)
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        Failed to fetch clerks data!
+                    </Notification>,
+                )
+                setClerks([])
+            }
+        },
+        [],
+    )
+
+    useEffect(() => {
+        fetchClerkData(currentPage, pageSize, search)
+    }, [currentPage, pageSize, search, fetchClerkData])
+
+    //dialogbox for for add clerk page
     const openDialog = () => {
         setIsOpen(true)
     }
@@ -32,6 +64,11 @@ const ClerkPage = () => {
 
     const handleAdd = () => {
         navigate('/app/admin/action/clerk-signup')
+    }
+
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
     }
     return (
         <div>
@@ -49,10 +86,9 @@ const ClerkPage = () => {
                     <div className="grid grid-cols-10 grid-rows-1 gap-0.5 ">
                         <div className="col-span-3 flex justify-end items-end">
                             <DebouceInput
-                                // ref={}
                                 placeholder="Quick search..."
                                 suffix={<TbSearch className="text-lg" />}
-                                // onChange={(e) => onInputChange(e.target.value)}
+                                onChange={(e) => onInputChange(e.target.value)}
                             />
                         </div>
 
@@ -82,72 +118,107 @@ const ClerkPage = () => {
                                         <Th>Office</Th>
                                         <Th>District</Th>
                                         <Th>Status</Th>
+                                        <Th>Contact NO.</Th>
+                                        <Th>Email ID.</Th>
                                         <Th>Registered On</Th>
                                         <Th>Actions</Th>
                                     </Tr>
                                 </THead>
                                 <TBody>
-                                    <Tr>
-                                        <Td>1</Td>
-                                        <Td>Swar Patel</Td>
-                                        <Td>C00/2024/0012</Td>
-                                        <Td>Ahmedabad Municipal Corporation</Td>
-                                        <Td>Ahmedabad</Td>
-                                        <Td>active</Td>
-                                        <Td>12 May 2024</Td>
-                                        <Td>
-                                            <div className="flex flex-row h-3  items-center">
-                                                <Button
-                                                    variant="plain"
-                                                    onClick={() => openDialog()}
-                                                >
-                                                    <TbPencil className="h-5 w-5  " />
-                                                </Button>
-
-                                                <div>
-                                                    <Dialog
-                                                        isOpen={dialogIsOpen}
-                                                        onClose={onDialogClose}
-                                                        onRequestClose={
-                                                            onDialogClose
+                                    {clerks.map((clerk, index) => (
+                                        <Tr key={clerk._id}>
+                                            <Td>{index + 1}</Td>
+                                            <Td>
+                                                {clerk.aadharId.firstName}{' '}
+                                                {clerk.aadharId.lastName}
+                                            </Td>
+                                            <Td>{clerk.employeeId}</Td>
+                                            <Td>
+                                                {
+                                                    clerk.officeDepartmentId
+                                                        .officeId?.name
+                                                }
+                                            </Td>
+                                            <Td>
+                                                {
+                                                    clerk.officeDepartmentId
+                                                        .officeId?.districtId
+                                                        .name
+                                                }
+                                            </Td>
+                                            <Td>{clerk.status}</Td>
+                                            <Td>
+                                                {'+91'} {clerk.aadharId.contact}
+                                            </Td>
+                                            <Td>{clerk.email}</Td>
+                                            <Td>
+                                                {clerk.createdAt.slice(0, 10)}
+                                            </Td>
+                                            <Td>
+                                                <div className="flex flex-row h-3  items-center">
+                                                    <Button
+                                                        variant="plain"
+                                                        onClick={() =>
+                                                            openDialog()
                                                         }
                                                     >
-                                                        <h5 className="mb-4">
-                                                            Change Staus
-                                                        </h5>
-                                                        <Select placeholder="set status" />
-                                                        <div className="text-right mt-6">
-                                                            <Button
-                                                                className="ltr:mr-2 rtl:ml-2"
-                                                                variant="plain"
-                                                                onClick={
-                                                                    onDialogClose
-                                                                }
-                                                            >
-                                                                Cancel
-                                                            </Button>
-                                                            <Button
-                                                                variant="solid"
-                                                                onClick={
-                                                                    onDialogOk
-                                                                }
-                                                            >
-                                                                Done
-                                                            </Button>
-                                                        </div>
-                                                    </Dialog>
-                                                </div>
+                                                        <TbPencil className="h-5 w-5  " />
+                                                    </Button>
 
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5 w-5 " />
-                                                </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
+                                                    <div>
+                                                        <Dialog
+                                                            isOpen={
+                                                                dialogIsOpen
+                                                            }
+                                                            onClose={
+                                                                onDialogClose
+                                                            }
+                                                            onRequestClose={
+                                                                onDialogClose
+                                                            }
+                                                        >
+                                                            <h5 className="mb-4">
+                                                                Change Staus
+                                                            </h5>
+                                                            <Select placeholder="set status" />
+                                                            <div className="text-right mt-6">
+                                                                <Button
+                                                                    className="ltr:mr-2 rtl:ml-2"
+                                                                    variant="plain"
+                                                                    onClick={
+                                                                        onDialogClose
+                                                                    }
+                                                                >
+                                                                    Cancel
+                                                                </Button>
+                                                                <Button
+                                                                    variant="solid"
+                                                                    onClick={
+                                                                        onDialogOk
+                                                                    }
+                                                                >
+                                                                    Done
+                                                                </Button>
+                                                            </div>
+                                                        </Dialog>
+                                                    </div>
+
+                                                    <Button variant="plain">
+                                                        <TbTrash className="h-5 w-5 " />
+                                                    </Button>
+                                                </div>
+                                            </Td>
+                                        </Tr>
+                                    ))}
                                 </TBody>
                             </Table>
                             <div className="justify-self-end">
-                                <Pagination onChange={onPaginationChange} />
+                                <Pagination
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    total={totalItems}
+                                    onChange={onPaginationChange}
+                                />
                             </div>
                         </div>
                     </Card>

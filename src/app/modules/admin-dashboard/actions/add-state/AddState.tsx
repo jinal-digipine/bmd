@@ -1,24 +1,43 @@
 import { useState } from 'react'
 import Button from '@/components/ui/Button'
 import Dialog from '@/components/ui/Dialog'
-import type { MouseEvent } from 'react'
+import type { ChangeEvent, MouseEvent } from 'react'
 import { FormItem, Form } from '@/components/ui/Form'
-import { Input } from '@/components/ui'
+import { Input, Notification, toast } from '@/components/ui'
 import { useNavigate } from 'react-router'
+import { StateApis } from '@/app/@api/state-module/state.api'
 
 const AddState = () => {
     const [dialogIsOpen, setIsOpen] = useState(true)
 
     const navigate = useNavigate()
+    const [stateName, setStateName] = useState('')
 
     const onDialogClose = (e: MouseEvent) => {
         setIsOpen(false)
         navigate('/app/admin/states-page')
     }
 
-    const onDialogOk = (e: MouseEvent) => {
-        setIsOpen(false)
-        navigate('/app/admin/states-page')
+    const handleAdd = async () => {
+        try {
+            const res = await StateApis.create({
+                name: stateName,
+            })
+            if (res) {
+                toast.push(
+                    <Notification closable type="success" duration={3000}>
+                        State Added successfully!
+                    </Notification>,
+                )
+            }
+
+            setIsOpen(false)
+
+            navigate('/app/admin/states-page')
+        } catch (error) {
+            alert(error)
+            navigate('/app/admin/states-page')
+        }
     }
 
     return (
@@ -35,9 +54,13 @@ const AddState = () => {
                 <Form>
                     <FormItem asterisk label="State Name">
                         <Input
+                            value={stateName}
                             type="text"
                             autoComplete="off"
                             placeholder="e.g. Himachal Pradesh"
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                                setStateName(e.target.value)
+                            }
                         />
                     </FormItem>
                 </Form>
@@ -49,7 +72,7 @@ const AddState = () => {
                     >
                         Cancel
                     </Button>
-                    <Button variant="solid" onClick={onDialogOk}>
+                    <Button variant="solid" onClick={handleAdd}>
                         Add
                     </Button>
                 </div>

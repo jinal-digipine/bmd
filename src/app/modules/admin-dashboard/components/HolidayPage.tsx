@@ -1,20 +1,71 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
-import { AdaptiveCard, Container } from '@/components/shared'
-import { TbTrash } from 'react-icons/tb'
+import { AdaptiveCard, Container, DebouceInput } from '@/components/shared'
+import { TbSearch, TbTrash } from 'react-icons/tb'
 import { FiPlus } from 'react-icons/fi'
 import { useNavigate } from 'react-router'
+import { Holiday } from '@/app/@api/holiday/holiday.types'
+import { useCallback, useEffect, useState } from 'react'
+import { HolidayApis } from '@/app/@api/holiday/holiday.api'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 const HolidayPage = () => {
     const navigate = useNavigate()
+    const [holidays, setHolidays] = useState<Holiday.Detail[]>([])
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [totalItems, setTotalItems] = useState<number>(10)
+
+    const [search, setSearch] = useState<string>('')
 
     const onPaginationChange = (page: number) => {
-        console.log('onPaginationChange', page)
+        setCurrentPage(page)
     }
 
+    const fetchHolidayData = useCallback(
+        async (page: number, limit: number, search: string) => {
+            try {
+                const response = await HolidayApis.list(page, limit, search)
+                setHolidays(response.data || response || [])
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        Failed to fetch holidays data!
+                    </Notification>,
+                )
+                return []
+            }
+        },
+        [],
+    )
+    useEffect(() => {
+        fetchHolidayData(currentPage, pageSize, search)
+    }, [currentPage, pageSize, search, fetchHolidayData])
+
+    const handleDelet = async (Id: Holiday.Id) => {
+        try {
+            await HolidayApis.delete(Id)
+            fetchHolidayData(currentPage, pageSize, search)
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    Holiday Deleted Sucessfully.
+                </Notification>,
+            )
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to Delete Holiday!
+                </Notification>,
+            )
+        }
+    }
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
+    }
     const handleAdd = () => {
         navigate('/app/admin/action/add-holiday')
     }
@@ -33,15 +84,22 @@ const HolidayPage = () => {
                     </div>
 
                     <div className="grid grid-cols-10 grid-rows-1 gap-0.5 ">
+                        <div className="col-span-3 flex justify-end items-end">
+                            <DebouceInput
+                                placeholder="Quick search..."
+                                suffix={<TbSearch className="text-lg" />}
+                                onChange={(e) => onInputChange(e.target.value)}
+                            />
+                        </div>
                         <div className="col-span-2 col-start-9 flex justify-end items-center">
                             <Button
                                 type="button"
                                 variant="solid"
-                                className="mt-8 justify-self-end "
+                                className="mt-8 justify-self-end  "
                                 onClick={handleAdd}
                             >
                                 <div className="flex flex-row">
-                                    <FiPlus className="mr-2 mt-1" />
+                                    <FiPlus className="mr-2 mt-1 " />
                                     Add Holiday
                                 </div>
                             </Button>
@@ -64,28 +122,58 @@ const HolidayPage = () => {
                                     </Tr>
                                 </THead>
                                 <TBody>
-                                    <Tr>
-                                        <Td>1</Td>
-                                        <Td>Diwali</Td>
-                                        <Td>
-                                            The Festival of Love and Rangolis.
-                                        </Td>
-                                        <Td>08/11/2026</Td>
-                                        <Td>2026</Td>
-                                        <Td>Yes</Td>
-                                        <Td>Gandhinagar</Td>
-                                        <Td className="">
-                                            <div className="flex flex-row h-4  items-center">
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5 w-5 " />
-                                                </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
+                                    {holidays
+                                        .toReversed()
+                                        .map((holiday, index) => (
+                                            <Tr key={holiday._id}>
+                                                <Td>{index + 1}</Td>
+                                                <Td>{holiday.title}</Td>
+                                                <Td>{holiday.description}</Td>
+                                                <Td>
+                                                    {holiday.holidayDate.slice(
+                                                        0,
+                                                        10,
+                                                    )}
+                                                </Td>
+
+                                                <Td>{holiday.year}</Td>
+                                                <Td>
+                                                    {holiday.isNationalHoliday ===
+                                                    true
+                                                        ? 'Yes'
+                                                        : 'No'}
+                                                </Td>
+                                                <Td>
+                                                    {holiday.officeId === null
+                                                        ? '--'
+                                                        : holiday.officeId.name}
+                                                </Td>
+
+                                                <Td className="">
+                                                    <div className="flex flex-row h-4  items-center">
+                                                        <Button
+                                                            variant="plain"
+                                                            onClick={() =>
+                                                                handleDelet(
+                                                                    holiday._id,
+                                                                )
+                                                            }
+                                                        >
+                                                            <TbTrash className="h-5 w-5 " />
+                                                        </Button>
+                                                    </div>
+                                                </Td>
+                                            </Tr>
+                                        ))}
                                 </TBody>
                             </Table>
                             <div className="justify-self-end">
-                                <Pagination onChange={onPaginationChange} />
+                                <Pagination
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    total={totalItems}
+                                    onChange={onPaginationChange}
+                                />
                             </div>
                         </div>
                     </Card>
