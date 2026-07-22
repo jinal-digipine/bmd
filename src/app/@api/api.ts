@@ -4,7 +4,7 @@ const api = axios.create({
     baseURL: 'https://7wcqc54f-3000.inc1.devtunnels.ms/',
 })
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('access_tokens')
+    const token = localStorage.getItem('token')
 
     if (token) {
         config.headers.Authorization = `Bearer ${token}`

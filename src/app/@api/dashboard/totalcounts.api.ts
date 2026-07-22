@@ -9,7 +9,7 @@ export const TotalCountsApis = {
     },
 
     async getMonthlyCount(
-        year = new Date().getFullYear(),
+        year: number = new Date().getFullYear(),
     ): Promise<TotalCount.Apis.MonthlyApplicationResponse> {
         const res = await api.get<TotalCount.Apis.MonthlyApplicationResponse>(
             `/application/monthly-trend?year=${year}`,
