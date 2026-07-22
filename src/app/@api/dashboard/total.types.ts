@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-
 export namespace TotalCount {
     export interface Base {
         totalUsers: number
@@ -14,7 +13,13 @@ export namespace TotalCount {
         rejectedApplications: number
     }
 
+    export interface MonthlyVal {
+        month: string
+        count: number
+    }
+
     export namespace Apis {
         export type ListResponse = Base
+        export type MonthlyApplicationResponse = MonthlyVal[]
     }
 }
