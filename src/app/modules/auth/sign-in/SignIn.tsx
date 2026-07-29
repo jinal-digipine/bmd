@@ -5,7 +5,6 @@ export const SignInBase = ({
     signUpUrl = '/sign-up',
     forgotPasswordUrl = '/forgot-password',
 }) => {
-    //w-120
     return (
         <div className="text-center flex flex-col gap-2 justify-center items-center h-[calc(100dvh)] bg-white">
             <div className="mb-4">

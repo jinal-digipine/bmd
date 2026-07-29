@@ -256,6 +256,7 @@ export const protectedRoutes: Routes = [
     {
         key: 'admin.add.district',
         path: 'admin/action/add-district',
+
         component: lazy(
             () =>
                 import(

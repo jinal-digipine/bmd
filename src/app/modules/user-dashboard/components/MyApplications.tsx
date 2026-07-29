@@ -1,34 +1,41 @@
 import { Card } from '@/components/ui'
-import Container from './HomeContainer'
-import { FileText } from 'lucide-react'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
+import { useEffect, useState } from 'react'
+import { Application } from '@/app/@api/application-module/application.types'
+import { ApplicationApis } from '@/app/@api/application-module/application.api'
+import { AdaptiveCard, Container } from '@/components/shared'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 function MyApplications() {
+    const [applications, setApplications] = useState<Application.Detail[]>([])
+
     const onPaginationChange = (page: number) => {
         console.log('onPaginationChange', page)
     }
+    const fetchApplicationData = async () => {
+        try {
+            const response = await ApplicationApis.list()
+            setApplications(response.data)
+        } catch {
+            alert('error occured in user-application page')
+            return []
+        }
+    }
+    useEffect(() => {
+        fetchApplicationData()
+    })
 
     return (
         <div>
-            <Container className="max-w-9xl">
-                <div className="">
-                    <h2>My Applications</h2>
-                    <p>View and track all your submitted applications</p>
-                </div>
-                <Card className="mt-6">
-                    <div className="flex flex-row">
-                        <div className="flex justify-center items-center h-12 w-12 bg-blue-100 dark:bg-gray-400 rounded-2xl ">
-                            <FileText className="h-10 w-10  text-blue-700" />
-                        </div>
-
-                        <div className="pl-3">
-                            <h3>Application List</h3>
-                            <p>Track the status of all your applications</p>
-                        </div>
+            <Container>
+                <AdaptiveCard>
+                    <div className="pt-4 pl-3">
+                        <h2>My Applications</h2>
+                        <p>View and track all your submitted applications</p>
                     </div>
+
                     <Card className="mt-6">
                         <div>
                             <Table>
@@ -42,41 +49,17 @@ function MyApplications() {
                                     </Tr>
                                 </THead>
                                 <TBody>
-                                    <Tr>
-                                        <Td>1</Td>
-                                        <Td>BDM/2026/000201</Td>
-                                        <Td>Birth</Td>
-                                        <Td>20/04/2026</Td>
-                                        <Td>Pending</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>2</Td>
-                                        <Td>BDM/2026/000315</Td>
-                                        <Td>Marriage</Td>
-                                        <Td>02/03/2026</Td>
-                                        <Td>Rejected</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>3</Td>
-                                        <Td>BDM/2026/000201</Td>
-                                        <Td>Birth</Td>
-                                        <Td>20/04/2026</Td>
-                                        <Td>Pending</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>4</Td>
-                                        <Td>BDM/2026/000201</Td>
-                                        <Td>Birth</Td>
-                                        <Td>20/04/2026</Td>
-                                        <Td>Pending</Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>5</Td>
-                                        <Td>BDM/2025/004011</Td>
-                                        <Td>Death</Td>
-                                        <Td>18/02/2025</Td>
-                                        <Td>Aproved</Td>
-                                    </Tr>
+                                    {applications.map((application, index) => (
+                                        <Tr key={application._id}>
+                                            <Td>{index}</Td>
+                                            <Td>
+                                                {application.applicationNumber}
+                                            </Td>
+                                            <Td>{application.serviceType}</Td>
+                                            <Td>{application.createdAt}</Td>
+                                            <Td>{application.status}</Td>
+                                        </Tr>
+                                    ))}
                                 </TBody>
                             </Table>
                             <div className="justify-self-end">
@@ -84,7 +67,7 @@ function MyApplications() {
                             </div>
                         </div>
                     </Card>
-                </Card>
+                </AdaptiveCard>
             </Container>
         </div>
     )

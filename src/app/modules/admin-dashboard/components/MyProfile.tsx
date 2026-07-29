@@ -1,21 +1,45 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import {
     BadgeInfo,
     IdCard,
     LogOut,
     Mail,
     Phone,
-    User,
+    User2,
     LockKeyhole,
 } from 'lucide-react'
 import { ActionLink, Container } from '@/components/shared'
 import { PiShieldCheckDuotone } from 'react-icons/pi'
 import { HiUser } from 'react-icons/hi2'
 import { TbCircleCheck } from 'react-icons/tb'
+import { User } from '@/app/@api/user/user.types'
+import { UserApis } from '@/app/@api/user/user.api'
+import { useEffect, useState } from 'react'
 
 const logOutUrl = '/'
 
 function MyProfile() {
+    const [user, setUser] = useState<User.Detail>()
+
+    const fetchUserData = async () => {
+        try {
+            const UserId = '6a4d09e13e50190ad1335f48' as User.Id
+
+            const response = await UserApis.get(UserId)
+            setUser(response.data || response || [])
+        } catch (err: any) {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    {err.message || 'Something went wrong!!'}
+                </Notification>,
+            )
+            return []
+        }
+    }
+    useEffect(() => {
+        fetchUserData()
+    }, [])
+
     return (
         <main>
             <Container>
@@ -29,7 +53,8 @@ function MyProfile() {
                             </div>
                             <div className=" flex justify-center items-center mt-3 mb-1">
                                 <h3 className="flex justify-center items-center">
-                                    John Doe
+                                    {user?.aadharId.firstName}
+                                    {user?.aadharId.lastName}
                                 </h3>
                             </div>
                             <div className="">
@@ -79,7 +104,7 @@ function MyProfile() {
                                 <div className="row-start-2">
                                     <div className="flex flex-row">
                                         <div className="flex justify-center items-center h-6 w-6  rounded-lg ">
-                                            <User className="h-5 w-5" />
+                                            <User2 className="h-5 w-5" />
                                         </div>
 
                                         <p className="pl-3">Full Name</p>
@@ -125,16 +150,22 @@ function MyProfile() {
                                     </Card>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-2">
-                                    <p>: John Doe</p>
+                                    <p>
+                                        : {user?.aadharId.firstName}{' '}
+                                        {user?.aadharId.middleName}{' '}
+                                        {user?.aadharId.lastName}
+                                    </p>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-3">
-                                    <p>: john.doe@gmail.com</p>
+                                    <p>: {`${user?.aadharId.email}`}</p>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-4">
-                                    <p>: 9843678670</p>
+                                    <p>
+                                        : {'+91'} {`${user?.aadharId.contact}`}
+                                    </p>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-5">
-                                    <p>: XXXX XXXX 1234</p>
+                                    <p>: {`${user?.aadharId.aadharNumber}`}</p>
                                 </div>
                                 <div className="col-start-5 row-start-2">
                                     <div className="justify-self-end items-center h-7 w-7 pt-1 px-1 rounded-full bg-gray-100 dark:bg-gray-700 cursor-not-allowed ">
