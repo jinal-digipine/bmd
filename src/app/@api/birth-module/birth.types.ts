@@ -17,7 +17,7 @@ export namespace Birth {
     export interface Base {
         _id: Id
         babyName: string
-        birthDateandTime: string
+        birthDateAndTime: string
         officeDepartmentId: OfficeDepartment.Id // ref of officedepartment
         birthPlace: string
         babyGender: EGender //enum
@@ -52,7 +52,7 @@ export namespace Birth {
 
         export interface Update {
             babyName?: string
-            birthDateandTime?: string
+            birthDateAndTime?: string
             babyWeight?: number
             babyGender?: string
             birthPlace?: string

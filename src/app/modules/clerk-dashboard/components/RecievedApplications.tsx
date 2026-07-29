@@ -1,12 +1,12 @@
-import { Card } from '@/components/ui'
+import { Card, Notification, toast } from '@/components/ui'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import { IoCloseSharp } from 'react-icons/io5'
 import {
     ActionLink,
     AdaptiveCard,
-    AutoComplete,
     Container,
+    DebouceInput,
 } from '@/components/shared'
 import {
     TbChecks,
@@ -17,36 +17,187 @@ import {
 } from 'react-icons/tb'
 import { Application } from '@/app/@api/application-module/application.types'
 import { ApplicationApis } from '@/app/@api/application-module/application.api'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-const editB = '/app/clerk/action/forms/birth'
-const editM = '/app/clerk/action/forms/marriage'
-const editD = '/app/clerk/action/forms/death'
-const viewB = '/app/clerk/action/view/birth'
-const viewM = '/app/clerk/action/view/marriage'
-const viewD = '/app/clerk/action/view/death'
+import MarriageApplication from '../actions/view-marriage/MarriageApplication'
+import DeathApplication from '../actions/view-death/DeathApplication'
+import BirthApplication from '../actions/view-birth/BirthApplication'
+import EditBirthForm from '../actions/edit-birth/BirthForm'
+import EditMarriageForm from '../actions/edit-marriage/MarriageForm'
+import EditDeathForm from '../actions/edit-death/DeathForm'
+import { User } from '@/app/@api/user/user.types'
+import { TotalApis } from '@/app/@api/clerk-dashboard/totals.api'
+import { TotalCount } from '@/app/@api/clerk-dashboard/totals.types'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 const MyApplications = () => {
     const [applications, setApplications] = useState<Application.Detail[]>([])
 
+    const [choosenViewService, setChoosenViewService] =
+        useState<Application.Detail | null>(null)
+    const [selectedEditService, setSelectedEditService] =
+        useState<Application.Detail | null>(null)
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [selectedStatus, setSelectedStatus] = useState<string>('')
+    const [search, setSearch] = useState<string>('')
+
+    const [counts, setCounts] = useState<TotalCount.Base>()
+
     const onPaginationChange = (page: number) => {
-        console.log('onPaginationChange', page)
+        setCurrentPage(page)
+    }
+    const fetchApplicationData = useCallback(
+        async (
+            page: number,
+            limit: number,
+            searchVal: string,
+            statusVal: string,
+        ) => {
+            try {
+                const response = await ApplicationApis.list(
+                    page,
+                    limit,
+                    searchVal,
+                    statusVal,
+                )
+                setApplications(response.data || response)
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        Something Went Wrong!! Try Again..
+                    </Notification>,
+                )
+            }
+        },
+        [],
+    )
+
+    useEffect(() => {
+        fetchApplicationData(currentPage, pageSize, search, selectedStatus)
+    }, [currentPage, pageSize, search, selectedStatus, fetchApplicationData])
+
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
     }
 
-    const fetchApplicationData = async () => {
+    const handleStatusFilter = (status: string) => {
+        setSelectedStatus(status)
+        setCurrentPage(1)
+    }
+
+    //------> handle the updating the application status to approved
+    const handleApproveApplication = async (
+        application: Application.Detail,
+    ) => {
         try {
-            const response = await ApplicationApis.list()
-            setApplications(response.data)
+            await ApplicationApis.update(application._id, {
+                status: Application.EStatus.ACCEPTED,
+            })
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    This Application Approved Successfully.
+                </Notification>,
+            )
+            // reload table for this val changes
+            fetchApplicationData(currentPage, pageSize, search, selectedStatus)
         } catch {
-            console.log('error occured in clerk-application page')
-            return []
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to Approve This application.!
+                </Notification>,
+            )
+        }
+    }
+    //------> handle the updating the application to rejected
+    const handleRejectApplication = async (application: Application.Detail) => {
+        try {
+            await ApplicationApis.update(application._id, {
+                status: Application.EStatus.REJECTED,
+            })
+
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    This Application Rejected Successfully.
+                </Notification>,
+            )
+            // reload table for this val changes
+            fetchApplicationData(currentPage, pageSize, search, selectedStatus)
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to Reject This Application!
+                </Notification>,
+            )
+        }
+    }
+
+    //------> function to fetch dynamic count for applications clerk specifice
+    const id = '6a5f7a456891b11a1ae72a29' as User.Id
+    const fetchCountsValues = async (id: User.Id) => {
+        try {
+            const res = await TotalApis.list(id)
+            setCounts(res)
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    something went wrong while fetching counts!!
+                </Notification>,
+            )
         }
     }
     useEffect(() => {
-        fetchApplicationData()
-    })
+        fetchCountsValues(id)
+    }, [id])
+
+    //------> for view forms based on type , dynamic rendering of view pages
+    if (choosenViewService) {
+        if (choosenViewService.serviceType === Application.EService.BIRTH) {
+            return (
+                <BirthApplication
+                    id={choosenViewService._id as Application.Id}
+                />
+            )
+        }
+        if (choosenViewService.serviceType === Application.EService.MARRIAGE) {
+            return (
+                <MarriageApplication
+                    id={choosenViewService._id as Application.Id}
+                />
+            )
+        }
+        if (choosenViewService.serviceType === Application.EService.DEATH) {
+            return (
+                <DeathApplication
+                    id={choosenViewService._id as Application.Id}
+                />
+            )
+        }
+    }
+
+    // //------> for edit forms based on type, for dynamic rendering the update pages of application
+    if (selectedEditService) {
+        if (selectedEditService.serviceType === Application.EService.BIRTH) {
+            return (
+                <EditBirthForm id={selectedEditService._id as Application.Id} />
+            )
+        }
+        if (selectedEditService.serviceType === Application.EService.MARRIAGE) {
+            return (
+                <EditMarriageForm
+                    id={selectedEditService._id as Application.Id}
+                />
+            )
+        }
+        if (selectedEditService.serviceType === Application.EService.DEATH) {
+            return (
+                <EditDeathForm id={selectedEditService._id as Application.Id} />
+            )
+        }
+    }
 
     return (
         <div>
@@ -59,45 +210,65 @@ const MyApplications = () => {
                         </p>
                     </div>
                     <div className="grid grid-cols-10 grid-rows-1 gap-2 mt-8 ">
-                        <div className=" border-2 rounded-lg h-10 hover:text-blue-600 flex justify-center items-center ">
+                        <button
+                            type="button"
+                            className="border-2 rounded-lg h-10 hover:text-blue-600 hover:bg-blue-50 transition duration-300 ease-in-out hover:scale-105 flex justify-center items-center"
+                            onClick={() => handleStatusFilter('')}
+                        >
                             <div className="flex flex-row">
                                 <p>All</p>
-                                <p className=" ml-2">128</p>
+                                <p className="ml-2">
+                                    {counts?.totalApplications}
+                                </p>
                             </div>
-                        </div>
-                        <div className="">
-                            <div className=" border-2 rounded-lg h-10 hover:text-yellow-600 flex justify-center items-center">
-                                <div className="flex flex-row">
-                                    <p>Pending</p>
-                                    <p className=" ml-2">67</p>
-                                </div>
+                        </button>
+                        <button
+                            type="button"
+                            className="border-2 rounded-lg h-10 hover:text-yellow-600 hover:bg-yellow-50  transition duration-300 ease-in-out hover:scale-105 flex justify-center items-center"
+                            onClick={() => handleStatusFilter('pending')}
+                        >
+                            <div className="flex flex-row">
+                                <p>Pending</p>
+                                <p className="ml-2">
+                                    {counts?.pendingApplications}
+                                </p>
                             </div>
-                        </div>
-                        <div>
-                            <div className=" border-2 rounded-lg h-10 hover:text-green-600 flex justify-center items-center">
-                                <div className="flex flex-row">
-                                    <p>Approved</p>
-                                    <p className=" ml-2">43</p>
-                                </div>
+                        </button>
+
+                        <button
+                            type="button"
+                            className="border-2 rounded-lg h-10 hover:text-green-600 hover:bg-green-50 transition duration-300 ease-in-out hover:scale-105 flex justify-center items-center"
+                            onClick={() => handleStatusFilter('approved')}
+                        >
+                            <div className="flex flex-row">
+                                <p>Approved</p>
+                                <p className="ml-2">
+                                    {counts?.approvedApplications}
+                                </p>
                             </div>
-                        </div>
-                        <div>
-                            <div className=" border-2 rounded-lg h-10 hover:text-red-600 flex justify-center items-center">
-                                <div className="flex flex-row">
-                                    <p>Rejected</p>
-                                    <p className=" ml-2">18</p>
-                                </div>
+                        </button>
+                        <button
+                            type="button"
+                            className="border-2 rounded-lg h-10 hover:text-red-600 hover:bg-red-50 transition duration-300 ease-in-out hover:scale-105 flex justify-center items-center"
+                            onClick={() => handleStatusFilter('rejected')}
+                        >
+                            <div className="flex flex-row">
+                                <p>Rejected</p>
+                                <p className="ml-2">
+                                    {counts?.rejectedApplications}
+                                </p>
                             </div>
-                        </div>
-                        <div className=" col-span-3 col-start-8 flex justify-end items-end ">
-                            <AutoComplete
-                                suffix={<TbSearch className="text-lg " />}
-                                placeholder="Search by application no ... "
-                                className="justify-items-start w-xs border border-neutral-300 rounded-xl"
+                        </button>
+
+                        <div className=" col-span-3 col-start-8 flex justify-end items-end transition duration-300 ease-in-out hover:scale-101">
+                            <DebouceInput
+                                placeholder="Quick search..."
+                                suffix={<TbSearch className="text-lg" />}
+                                onChange={(e) => onInputChange(e.target.value)}
                             />
                         </div>
                     </div>
-                    {/* <hr className="my-4" /> */}
+
                     <Card className="my-4">
                         <div>
                             <Table>
@@ -107,69 +278,105 @@ const MyApplications = () => {
                                         <Th>Application No.</Th>
                                         <Th>Applicant Name</Th>
                                         <Th>Application Type</Th>
-                                        <Th>Date Recieved</Th>
+                                        <Th>Date Received</Th>
                                         <Th>Status</Th>
                                         <Th>Actions</Th>
                                     </Tr>
                                 </THead>
                                 <TBody>
                                     {applications.map((application, index) => (
-                                        <Tr key={application._id}>
-                                            <Td>{index}</Td>
+                                        <Tr key={application.applicationNumber}>
+                                            <Td>{index + 1}</Td>
                                             <Td>
                                                 {application.applicationNumber}
                                             </Td>
                                             <Td>
+                                                {application.userId?.aadharId?.firstName
+                                                    ?.charAt(0)
+                                                    .toLocaleUpperCase()}
+                                                {application.userId.aadharId?.firstName?.slice(
+                                                    1,
+                                                )}{' '}
                                                 {
-                                                    application.userId.aadharId
-                                                        .firstName
-                                                }{' '}
-                                                {
-                                                    application.userId.aadharId
-                                                        .lastName
+                                                    application.userId?.aadharId
+                                                        ?.lastName
                                                 }
                                             </Td>
-                                            <Td>{application.serviceType}</Td>
-                                            <Td>{application.createdAt}</Td>
-                                            <Td>{application.status}</Td>
+                                            <Td>
+                                                {application.serviceType
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                                {application.serviceType.slice(
+                                                    1,
+                                                )}
+                                            </Td>
+                                            <Td>
+                                                {application.createdAt.slice(
+                                                    0,
+                                                    10,
+                                                )}
+                                            </Td>
+                                            <Td>
+                                                {application.status
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                                {application.status.slice(1)}
+                                            </Td>
                                             <Td>
                                                 <div className="flex flex-row">
-                                                    <ActionLink
-                                                        to={viewB}
-                                                        themeColor={false}
-                                                        className=" mx-2"
+                                                    <button
+                                                        type="button"
+                                                        className="mx-2"
+                                                        onClick={() =>
+                                                            setChoosenViewService(
+                                                                application,
+                                                            )
+                                                        }
                                                     >
-                                                        <TbEye className="h-5 w-5 " />
-                                                    </ActionLink>
-                                                    <ActionLink
-                                                        to={editB}
-                                                        themeColor={false}
-                                                        className=" mx-2"
+                                                        <TbEye className="h-5 w-5" />
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        className="mx-2"
+                                                        onClick={() =>
+                                                            setSelectedEditService(
+                                                                application,
+                                                            )
+                                                        }
                                                     >
-                                                        <TbPencil className="h-5 w-5  " />
-                                                    </ActionLink>
+                                                        <TbPencil className="h-5 w-5 " />
+                                                    </button>
 
                                                     <ActionLink
-                                                        // to={myApplicationsUrl}
                                                         themeColor={false}
                                                         className=" mx-2"
                                                     >
-                                                        <TbVideoFilled className="h-5 w-5   " />
+                                                        <TbVideoFilled className="h-5 w-5 " />
                                                     </ActionLink>
-                                                    <ActionLink
-                                                        // to={myApplicationsUrl}
-                                                        themeColor={false}
-                                                        className="  mx-2"
+
+                                                    <button
+                                                        type="button"
+                                                        className="mx-2 hover:text-green-700"
+                                                        onClick={() =>
+                                                            handleApproveApplication(
+                                                                application,
+                                                            )
+                                                        }
                                                     >
-                                                        <TbChecks className="h-5  w-5  " />
-                                                    </ActionLink>
-                                                    <ActionLink
-                                                        // to={myApplicationsUrl}
-                                                        themeColor={false}
-                                                        className=" mx-2"
+                                                        <TbChecks className="h-5 w-5 " />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="mx-2 hover:text-red-700"
+                                                        onClick={() => {
+                                                            handleRejectApplication(
+                                                                application,
+                                                            )
+                                                        }}
                                                     >
                                                         <IoCloseSharp className="h-5 w-5 " />
-                                                    </ActionLink>
+                                                    </button>
                                                 </div>
                                             </Td>
                                         </Tr>

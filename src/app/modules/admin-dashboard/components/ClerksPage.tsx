@@ -10,8 +10,15 @@ import type { MouseEvent } from 'react'
 import { useCallback, useEffect, useState } from 'react'
 import { User } from '@/app/@api/user/user.types'
 import { ClerkListApis } from '@/app/@api/user/clerkList.api'
+import { UserApis } from '@/app/@api/user/user.api'
 
 const { Tr, Td, TBody, THead, Th } = Table
+
+const statusOptions = [
+    { label: 'Active', value: User.EStatus.ACTIVE },
+    { label: 'Pending', value: User.EStatus.PENDING },
+    { label: 'Block', value: User.EStatus.BLOCKED },
+]
 
 const ClerkPage = () => {
     const navigate = useNavigate()
@@ -23,6 +30,10 @@ const ClerkPage = () => {
     const [totalItems, setTotalItems] = useState<number>(10)
     const [search, setSearch] = useState<string>('')
 
+    //updating clerk status.
+    const [selectedClerk, setSelectedClerk] = useState<User.Detail | null>(null)
+    const [newStatus, setNewStatus] = useState<User.EStatus | null>(null)
+
     const onPaginationChange = (page: number) => {
         setCurrentPage(page)
     }
@@ -31,12 +42,12 @@ const ClerkPage = () => {
         async (page: number, limit: number, search?: string) => {
             try {
                 const response = await ClerkListApis.list(page, limit, search)
-                setClerks(response.data)
-                setTotalItems(totalItems)
+
+                setClerks(response.data || response)
             } catch {
                 toast.push(
                     <Notification closable type="danger" duration={3000}>
-                        Failed to fetch clerks data!
+                        something went wrong!!
                     </Notification>,
                 )
                 setClerks([])
@@ -50,16 +61,16 @@ const ClerkPage = () => {
     }, [currentPage, pageSize, search, fetchClerkData])
 
     //dialogbox for for add clerk page
-    const openDialog = () => {
+    const openDialog = (clerk: User.Detail) => {
         setIsOpen(true)
+        setSelectedClerk(clerk)
+        setNewStatus(clerk.status)
     }
 
     const onDialogClose = (e: MouseEvent) => {
         setIsOpen(false)
-    }
-
-    const onDialogOk = (e: MouseEvent) => {
-        setIsOpen(false)
+        setSelectedClerk(null)
+        setNewStatus(null)
     }
 
     const handleAdd = () => {
@@ -69,6 +80,29 @@ const ClerkPage = () => {
     function onInputChange(value: string): void {
         setSearch(value)
         setCurrentPage(1)
+    }
+
+    //fun to change the status of clerk
+    const handleStatus = async () => {
+        if (!selectedClerk || !newStatus) {
+            return
+        }
+        try {
+            await UserApis.update(selectedClerk?._id, {
+                status: newStatus,
+            })
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    This Clerks Status is Updated.
+                </Notification>,
+            )
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to update status of this clerk!!
+                </Notification>,
+            )
+        }
     }
     return (
         <div>
@@ -136,13 +170,13 @@ const ClerkPage = () => {
                                             <Td>
                                                 {
                                                     clerk.officeDepartmentId
-                                                        .officeId?.name
+                                                        .officeId.name
                                                 }
                                             </Td>
                                             <Td>
                                                 {
                                                     clerk.officeDepartmentId
-                                                        .officeId?.districtId
+                                                        .officeId.districtId
                                                         .name
                                                 }
                                             </Td>
@@ -159,49 +193,11 @@ const ClerkPage = () => {
                                                     <Button
                                                         variant="plain"
                                                         onClick={() =>
-                                                            openDialog()
+                                                            openDialog(clerk)
                                                         }
                                                     >
                                                         <TbPencil className="h-5 w-5  " />
                                                     </Button>
-
-                                                    <div>
-                                                        <Dialog
-                                                            isOpen={
-                                                                dialogIsOpen
-                                                            }
-                                                            onClose={
-                                                                onDialogClose
-                                                            }
-                                                            onRequestClose={
-                                                                onDialogClose
-                                                            }
-                                                        >
-                                                            <h5 className="mb-4">
-                                                                Change Staus
-                                                            </h5>
-                                                            <Select placeholder="set status" />
-                                                            <div className="text-right mt-6">
-                                                                <Button
-                                                                    className="ltr:mr-2 rtl:ml-2"
-                                                                    variant="plain"
-                                                                    onClick={
-                                                                        onDialogClose
-                                                                    }
-                                                                >
-                                                                    Cancel
-                                                                </Button>
-                                                                <Button
-                                                                    variant="solid"
-                                                                    onClick={
-                                                                        onDialogOk
-                                                                    }
-                                                                >
-                                                                    Done
-                                                                </Button>
-                                                            </div>
-                                                        </Dialog>
-                                                    </div>
 
                                                     <Button variant="plain">
                                                         <TbTrash className="h-5 w-5 " />
@@ -224,6 +220,39 @@ const ClerkPage = () => {
                     </Card>
                 </AdaptiveCard>
             </Container>
+
+            {/* dialogbox for update */}
+            <div>
+                <Dialog
+                    isOpen={dialogIsOpen}
+                    onClose={onDialogClose}
+                    onRequestClose={onDialogClose}
+                >
+                    <h5 className="mb-4">Change Staus</h5>
+                    <Select
+                        placeholder="set status"
+                        options={statusOptions}
+                        value={statusOptions.find(
+                            (opt) => opt.value === newStatus,
+                        )}
+                        onChange={(opti) =>
+                            setNewStatus(opti?.value as User.EStatus)
+                        }
+                    />
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            variant="plain"
+                            onClick={onDialogClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="solid" onClick={handleStatus}>
+                            Done
+                        </Button>
+                    </div>
+                </Dialog>
+            </div>
         </div>
     )
 }

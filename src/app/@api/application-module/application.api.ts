@@ -2,11 +2,21 @@ import api from '../api'
 import type { Application } from './application.types'
 
 export const ApplicationApis = {
-    async list(): Promise<Application.Apis.ListResponse> {
-        const response =
-            await api.get<Application.Apis.ListResponse>('/application/all')
+    async list(
+        page?: number,
+        limit?: number,
+        search?: string,
+        status?: string,
+    ): Promise<Application.Apis.ListResponse> {
+        const response = await api.get<Application.Apis.ListResponse>(
+            '/application/all',
+            {
+                params: { page, limit, search, status },
+            },
+        )
         return response.data
     },
+
     async get(id: Application.Id): Promise<Application.Apis.GetResponse> {
         const response = await api.get<Application.Apis.GetResponse>(
             `/application/${id}`,

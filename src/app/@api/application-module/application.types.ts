@@ -31,7 +31,7 @@ export namespace Application {
         slotId: Slot.Id //ref of slot
         serviceId: Birth.Id | Marriage.Id | Death.Id //ref of service
         serviceType: EService //enum
-        status: EStatus.PENDING //enum
+        status: EStatus //enum
         remark: string
         createdAt: string
         updatedAt: string
@@ -65,7 +65,6 @@ export namespace Application {
 
         //clerk will update this data on each application.
         export interface Update {
-            serviceId: Birth.Id | Marriage.Id | Death.Id
             status?: EStatus
             remark?: string
         }
