@@ -162,7 +162,7 @@ const DeathApplication = ({ id }: deathAplicationProp) => {
                                         <p>
                                             {
                                                 applicationData?.serviceId
-                                                    .deceasedMotherName
+                                                    .deceasedFatherName
                                             }
                                         </p>
                                     </div>

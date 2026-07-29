@@ -17,7 +17,7 @@ export namespace Death {
         deceasedAadharId: Aadhar.Id //ref of aadhar
         applicantAadharId: Aadhar.Id //ref of aadhar
         placeOfDeath: string
-        deathDateAndTime: string
+        dateAndTimeOfDeath: string
         deceasedFatherName: string
         deceasedMotherName: string
         deathType: EDeathType //enum
@@ -52,8 +52,7 @@ export namespace Death {
 
         export interface UpdatePayload {
             placeOfDeath?: string
-            deathDateAndTime?: string
-            deathType?: EDeathType
+            dateAndTimeOfDeath?: string
             deceasedMotherName?: string
             deceasedFatherName?: string
         }

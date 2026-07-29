@@ -24,7 +24,7 @@ type EditFormVal = {
     deceasedFatherName?: string
     deceasedMotherName?: string
     placeOfDeath?: string
-    deathDateAndTime?: Date
+    dateAndTimeOfDeath?: Date
 }
 
 const EditDeathForm = ({ id }: EditDeathFormProp) => {
@@ -33,10 +33,10 @@ const EditDeathForm = ({ id }: EditDeathFormProp) => {
 
     const { control, handleSubmit, reset } = useForm<EditFormVal>({
         defaultValues: {
-            deceasedFatherName: '',
             deceasedMotherName: '',
+            deceasedFatherName: '',
             placeOfDeath: '',
-            deathDateAndTime: undefined,
+            dateAndTimeOfDeath: undefined,
         },
     })
 
@@ -52,11 +52,11 @@ const EditDeathForm = ({ id }: EditDeathFormProp) => {
 
                     //filling the data in formfield from existing data
                     reset({
-                        deceasedFatherName: deathData.deceasedFatherName,
                         deceasedMotherName: deathData.deceasedMotherName,
+                        deceasedFatherName: deathData.deceasedFatherName,
                         placeOfDeath: deathData.placeOfDeath,
-                        deathDateAndTime: deathData.deathDateAndTime
-                            ? new Date(deathData.deathDateAndTime)
+                        dateAndTimeOfDeath: deathData.dateAndTimeOfDeath
+                            ? new Date(deathData.dateAndTimeOfDeath)
                             : undefined,
                     })
                 }
@@ -84,10 +84,10 @@ const EditDeathForm = ({ id }: EditDeathFormProp) => {
                 return
             }
             await DeathApis.update(serviceId, {
-                deceasedFatherName: values.deceasedFatherName,
-                deceasedMotherName: values.deceasedMotherName,
                 placeOfDeath: values.placeOfDeath,
-                deathDateAndTime: values.deathDateAndTime?.toISOString(),
+                dateAndTimeOfDeath: values.dateAndTimeOfDeath?.toISOString(),
+                deceasedMotherName: values.deceasedMotherName,
+                deceasedFatherName: values.deceasedFatherName,
             })
             toast.push(
                 <Notification closable type="success" duration={3000}>
@@ -131,7 +131,7 @@ const EditDeathForm = ({ id }: EditDeathFormProp) => {
                             <div className="col-span-3 col-start-4 row-start-1">
                                 <FormItem asterisk label="Date & Time of Death">
                                     <Controller
-                                        name="deathDateAndTime"
+                                        name="dateAndTimeOfDeath"
                                         control={control}
                                         render={({ field }) => (
                                             <DateTimepicker

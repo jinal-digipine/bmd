@@ -242,7 +242,9 @@ const HomeContent = () => {
                                                 </p>
                                                 <p className="font-semibold text-gray-900">
                                                     {clerk?.lastAssignedAt
-                                                        ? clerk.lastAssignedAt.toLocaleString()
+                                                        ? clerk.lastAssignedAt
+                                                              .toLocaleString()
+                                                              .slice(0, 10)
                                                         : '--'}
                                                 </p>
                                             </div>
@@ -296,7 +298,7 @@ const HomeContent = () => {
 
                                             <span
                                                 className={`inline-flex px-3 pb-1 rounded-full text font-semibold text-gray-900 ${
-                                                    clerk?.status === 'ACTIVE'
+                                                    clerk?.status === 'active'
                                                         ? 'bg-green-50 text-green-700'
                                                         : 'bg-red-50 text-red-700'
                                                 }`}
@@ -311,9 +313,11 @@ const HomeContent = () => {
                                                 <p className="text-gray-900 text-sm">
                                                     Last Login{'  : '}
                                                 </p>
-                                                <p className="font-semibold">
+                                                <p className="font-semibold text-gray-700 pb-2">
                                                     {clerk?.lastLoginAt
-                                                        ? clerk.lastLoginAt.toLocaleString()
+                                                        ? clerk.lastLoginAt
+                                                              .toLocaleString()
+                                                              .slice(0, 10)
                                                         : '--'}
                                                 </p>
                                             </div>
