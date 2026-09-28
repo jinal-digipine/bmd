@@ -1,22 +1,75 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import { AdaptiveCard, Container, DebouceInput } from '@/components/shared'
 import { TbSearch, TbTrash } from 'react-icons/tb'
 import { FiPlus } from 'react-icons/fi'
 import { useNavigate } from 'react-router'
+import { useCallback, useEffect, useState } from 'react'
+import { Office } from '@/app/@api/office-module/office.types'
+import { OfficeApis } from '@/app/@api/office-module/office.api'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 const OfficesPage = () => {
     const navigate = useNavigate()
+    const [offices, SetOffices] = useState<Office.Detail[]>([])
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [totalItems, setTotalItems] = useState<number>(10)
+
+    const [search, setSearch] = useState<string>('')
 
     const onPaginationChange = (page: number) => {
-        console.log('onPaginationChange', page)
+        setCurrentPage(page)
     }
+
+    //fetching offices
+    const fetchOfficeData = useCallback(
+        async (page: number, limit: number, search: string) => {
+            try {
+                const response = await OfficeApis.list(page, limit, search)
+                SetOffices(response.data || response || [])
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        Failed to fetch offices data!
+                    </Notification>,
+                )
+                SetOffices([])
+            }
+        },
+        [],
+    )
+
+    useEffect(() => {
+        fetchOfficeData(currentPage, pageSize, search)
+    }, [currentPage, pageSize, search, fetchOfficeData])
 
     const handleAdd = () => {
         navigate('/app/admin/action/add-office')
+    }
+    const handleDelete = async (id: Office.Id) => {
+        try {
+            await OfficeApis.delete(id)
+            fetchOfficeData(currentPage, pageSize, search)
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    Office Deleted Sucessfully.
+                </Notification>,
+            )
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to Delete Office!
+                </Notification>,
+            )
+        }
+    }
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
     }
 
     return (
@@ -34,28 +87,13 @@ const OfficesPage = () => {
                             </div>
                         </div>
                     </div>
-                    <Card className="mt-6">
-                        <div className="grid grid-cols-5 grid-rows-1 gap-4">
-                            <div>
-                                <p>State Name</p> <h6>Gujarat</h6>
-                            </div>
-
-                            <div>
-                                <p>Total Offices</p>
-                                <h6>1</h6>
-                            </div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    </Card>
 
                     <div className="grid grid-cols-10 grid-rows-1 gap-0.5 ">
                         <div className="col-span-3 flex justify-end items-end">
                             <DebouceInput
-                                // ref={}
                                 placeholder="Quick search..."
                                 suffix={<TbSearch className="text-lg" />}
-                                // onChange={(e) => onInputChange(e.target.value)}
+                                onChange={(e) => onInputChange(e.target.value)}
                             />
                         </div>
                         <div className="col-span-2 col-start-9 flex justify-end items-center">
@@ -82,40 +120,47 @@ const OfficesPage = () => {
                                         <Th>Office Name</Th>
                                         <Th>District</Th>
                                         <Th>State</Th>
+                                        <Th>Creation Date</Th>
                                         <Th>Actions</Th>
                                     </Tr>
                                 </THead>
                                 <TBody>
-                                    <Tr>
-                                        <Td>1</Td>
-                                        <Td>Thaltej BMD Office</Td>
-                                        <Td>Ahmedabad</Td>
-                                        <Td>Gujarat</Td>
-                                        <Td>
-                                            <div className="flex flex-row h-3  items-center">
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5  w-5 " />
-                                                </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>2</Td>
-                                        <Td>Maninagar BMD Office</Td>
-                                        <Td>Ahmedabad</Td>
-                                        <Td>Gujarat</Td>
-                                        <Td>
-                                            <div className="flex flex-row h-3  items-center">
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5  w-5 " />
-                                                </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
+                                    {offices.map((office, index) => (
+                                        <Tr key={office._id}>
+                                            <Td>{index + 1}</Td>
+                                            <Td>{office.name}</Td>
+                                            <Td>{office.districtId.name}</Td>
+                                            <Td>
+                                                {office.districtId.stateId.name}
+                                            </Td>
+                                            <Td>
+                                                {office.createdAt.slice(0, 10)}
+                                            </Td>
+                                            <Td>
+                                                <div className="flex flex-row h-3  items-center">
+                                                    <Button
+                                                        variant="plain"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                office._id,
+                                                            )
+                                                        }
+                                                    >
+                                                        <TbTrash className="h-5  w-5 " />
+                                                    </Button>
+                                                </div>
+                                            </Td>
+                                        </Tr>
+                                    ))}
                                 </TBody>
                             </Table>
                             <div className="justify-self-end">
-                                <Pagination onChange={onPaginationChange} />
+                                <Pagination
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    total={totalItems}
+                                    onChange={onPaginationChange}
+                                />
                             </div>
                         </div>
                     </Card>

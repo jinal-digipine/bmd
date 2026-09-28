@@ -1,4 +1,4 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Container from './HomeContainer'
 import {
     BadgeInfo,
@@ -6,17 +6,44 @@ import {
     LogOut,
     Mail,
     Phone,
-    User,
     LockKeyhole,
+    User2Icon,
 } from 'lucide-react'
 import { ActionLink } from '@/components/shared'
 import { PiShieldCheckDuotone } from 'react-icons/pi'
 import { HiUser } from 'react-icons/hi2'
 import { TbCircleCheck } from 'react-icons/tb'
+import { useEffect, useState } from 'react'
+import { User } from '@/app/@api/user/user.types'
+import { useNavigate } from 'react-router'
+import { UserApis } from '@/app/@api/user/user.api'
 
 const logOutUrl = '/'
 
 function MyProfile() {
+    const [userdata, setUserdata] = useState<User.Detail>()
+    const navigate = useNavigate()
+
+    const fetchUserData = async () => {
+        try {
+            const UserId = '6a516a28f7cc73300ae7e99c' as User.Id
+            const response = await UserApis.get(UserId)
+            setUserdata(response.data || response || [])
+        } catch (err: any) {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    {err.message || 'Something went wrong!!'}
+                </Notification>,
+            )
+            return []
+        }
+    }
+    useEffect(() => {
+        fetchUserData()
+    }, [])
+    const handleLogOut = () => {
+        navigate('/')
+    }
     return (
         <main>
             <Container className="max-w-full">
@@ -30,7 +57,9 @@ function MyProfile() {
                             </div>
                             <div className=" flex justify-center items-center mt-3 mb-1">
                                 <h3 className="flex justify-center items-center">
-                                    John Doe
+                                    {' '}
+                                    {userdata?.aadharId.firstName}{' '}
+                                    {userdata?.aadharId.lastName}
                                 </h3>
                             </div>
                             <div className="">
@@ -59,7 +88,10 @@ function MyProfile() {
                                     themeColor={false}
                                     className=" mb-1"
                                 >
-                                    <Button className="text-red-600  border-red-700  dark:text-red-500  justify-items-center">
+                                    <Button
+                                        className="text-red-600  border-red-700  dark:text-red-500  justify-items-center"
+                                        onClick={handleLogOut}
+                                    >
                                         <div className="flex flex-row ">
                                             <LogOut />
                                             SignOut
@@ -80,7 +112,7 @@ function MyProfile() {
                                 <div className="row-start-2">
                                     <div className="flex flex-row">
                                         <div className="flex justify-center items-center h-6 w-6  rounded-lg ">
-                                            <User className="h-5 w-5" />
+                                            <User2Icon className="h-5 w-5" />
                                         </div>
 
                                         <p className="pl-3">Full Name</p>
@@ -126,16 +158,25 @@ function MyProfile() {
                                     </Card>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-2">
-                                    <p>: John Doe</p>
+                                    <p>
+                                        : {userdata?.aadharId.firstName}{' '}
+                                        {userdata?.aadharId.middleName}{' '}
+                                        {userdata?.aadharId.lastName}
+                                    </p>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-3">
-                                    <p>: john.doe@gmail.com</p>
+                                    <p>: {`${userdata?.email}`} </p>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-4">
-                                    <p>: 9843678670</p>
+                                    <p>
+                                        : {'+91'}{' '}
+                                        {`${userdata?.aadharId.contact}`}
+                                    </p>
                                 </div>
                                 <div className="col-span-2 col-start-2 row-start-5">
-                                    <p>: XXXX XXXX 1234</p>
+                                    <p>
+                                        : {`${userdata?.aadharId.aadharNumber}`}
+                                    </p>
                                 </div>
                                 <div className="col-start-5 row-start-2">
                                     <div className="justify-self-end items-center h-7 w-7 pt-1 px-1 rounded-full bg-gray-100 dark:bg-gray-700 cursor-not-allowed ">

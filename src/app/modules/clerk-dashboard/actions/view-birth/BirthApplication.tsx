@@ -1,7 +1,6 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Container from '../../components/HomeContainer'
 import { ActionLink } from '@/components/shared'
-import adhar from '../../../../../assets/images/birthcard.png'
 import {
     Baby,
     CalendarDays,
@@ -16,10 +15,37 @@ import {
     Weight,
     ArrowLeft,
 } from 'lucide-react'
+import { Application } from '@/app/@api/application-module/application.types'
+import { useEffect, useState } from 'react'
+import { ApplicationApis } from '@/app/@api/application-module/application.api'
 
 const goback = '/app/clerk/applications'
 
-const BirthApplication = () => {
+interface birthApplicationProp {
+    id: Application.Id
+}
+
+const BirthApplication = ({ id }: birthApplicationProp) => {
+    // const id = '6a5fc8e48c67b6dc31dbf1c9' as Application.Id
+    const [applicationData, setApplicationData] = useState<Application.Detail>()
+
+    const fetchApplicationData = async () => {
+        try {
+            const res = await ApplicationApis.get(id)
+            setApplicationData(res.data || res)
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Something went wrong while fetching Application data!!
+                </Notification>,
+            )
+        }
+    }
+
+    useEffect(() => {
+        fetchApplicationData()
+    }, [id])
+
     return (
         <main>
             <Container className="max-w-full">
@@ -60,7 +86,12 @@ const BirthApplication = () => {
                                         <p className="font-semibold">
                                             Baby Name
                                         </p>
-                                        <p>kia Patel</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .babyName
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -69,7 +100,12 @@ const BirthApplication = () => {
                                         <p className="font-semibold">
                                             Date of Birth
                                         </p>
-                                        <p>22/11/2022</p>
+                                        <p>
+                                            {applicationData?.serviceId.birthDateAndTime.slice(
+                                                0,
+                                                10,
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -78,7 +114,12 @@ const BirthApplication = () => {
                                         <p className="font-semibold">
                                             Birth Time
                                         </p>
-                                        <p>04:00 PM</p>
+                                        <p>
+                                            {applicationData?.serviceId.birthDateAndTime.slice(
+                                                11,
+                                                19,
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -87,14 +128,24 @@ const BirthApplication = () => {
                                         <p className="font-semibold">
                                             Birth Weight
                                         </p>
-                                        <p>2.8 kg</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .babyWeight
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
                                     <Users className="mr-3 mt-1" />
                                     <div>
                                         <p className="font-semibold">Gender</p>
-                                        <p>Female</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .babyGender
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -103,7 +154,13 @@ const BirthApplication = () => {
                                         <p className="font-semibold">
                                             District
                                         </p>
-                                        <p>Ahmedabad</p>
+                                        <p>
+                                            {
+                                                applicationData
+                                                    ?.officeDepartmentId
+                                                    .officeId.districtId.name
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -112,14 +169,26 @@ const BirthApplication = () => {
                                         <p className="font-semibold">
                                             Place Of Birth
                                         </p>
-                                        <p>civil hospital, Ahmedabad</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .birthPlace
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
                                     <MapPin className="mr-3 mt-1" />
                                     <div>
                                         <p className="font-semibold">State</p>
-                                        <p>Gujarat</p>
+                                        <p>
+                                            {
+                                                applicationData
+                                                    ?.officeDepartmentId
+                                                    .officeId.districtId.stateId
+                                                    .name
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -140,24 +209,57 @@ const BirthApplication = () => {
                                 </div>
                             </div>
                             <div className="">
-                                <div className="flex">
-                                    <User className="mr-3 mt-6" />
-                                    <div className="my-6">
+                                <div className="flex my-4">
+                                    <User className="mr-3 " />
+                                    <div className="my-0">
                                         <p className="font-semibold ">
                                             Submitted By
                                         </p>
 
-                                        <p>John Doe</p>
+                                        <p>
+                                            {
+                                                applicationData?.userId.aadharId
+                                                    .firstName
+                                            }{' '}
+                                            {
+                                                applicationData?.userId.aadharId
+                                                    .lastName
+                                            }
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="flex">
-                                    <CalendarDays className="mr-3 mt-1" />
+                                <div className="flex my-4">
+                                    <User className="mr-3 " />
+                                    <div className="my-0">
+                                        <p className="font-semibold ">
+                                            Assigned To
+                                        </p>
+
+                                        <p>
+                                            {
+                                                applicationData?.clerkId
+                                                    .aadharId.firstName
+                                            }{' '}
+                                            {
+                                                applicationData?.clerkId
+                                                    .aadharId.lastName
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex my-4">
+                                    <CalendarDays className="mr-3 " />
 
                                     <div>
                                         <p className="font-semibold">
                                             Submission Date
                                         </p>
-                                        <p>09/04/2022</p>
+                                        <p>
+                                            {applicationData?.createdAt.slice(
+                                                0,
+                                                10,
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -183,14 +285,32 @@ const BirthApplication = () => {
                                 <User className="mr-3 mt-1" />
                                 <div>
                                     <p className="font-semibold">Mother Name</p>
-                                    <p>John Doe</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .motherAadharId.firstName
+                                        }{' '}
+                                        {
+                                            applicationData?.serviceId
+                                                .motherAadharId.lastName
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
                                 <User className="mr-3 mt-1" />
                                 <div>
                                     <p className="font-semibold">Father Name</p>
-                                    <p>John Doe</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.firstName
+                                        }{' '}
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.lastName
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
@@ -199,7 +319,12 @@ const BirthApplication = () => {
                                     <p className="font-semibold">
                                         Mother Aadhar
                                     </p>
-                                    <p>XXXX XXXX 1234</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .motherAadharId.aadharNumber
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
@@ -208,7 +333,12 @@ const BirthApplication = () => {
                                     <p className="font-semibold">
                                         Father Aadhar
                                     </p>
-                                    <p>XXXX XXXX 1235</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.aadharNumber
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
@@ -217,7 +347,12 @@ const BirthApplication = () => {
                                     <p className="font-semibold">
                                         Mother Mobile
                                     </p>
-                                    <p>9873012877</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .motherAadharId.contact
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
@@ -226,7 +361,12 @@ const BirthApplication = () => {
                                     <p className="font-semibold">
                                         Father Mobile
                                     </p>
-                                    <p>9873012877</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.contact
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
@@ -235,7 +375,12 @@ const BirthApplication = () => {
                                     <p className="font-semibold">
                                         Mother Email
                                     </p>
-                                    <p>john.doe@gamil.com</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .motherAadharId.email
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex">
@@ -244,7 +389,12 @@ const BirthApplication = () => {
                                     <p className="font-semibold">
                                         Father Email
                                     </p>
-                                    <p>john.doe@gmail.com</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.email
+                                        }
+                                    </p>
                                 </div>
                             </div>
                             <div className="col-span-2 flex">
@@ -254,8 +404,35 @@ const BirthApplication = () => {
                                         Permanent Address
                                     </p>
                                     <p>
-                                        112,sahakr colony, Sector-25,
-                                        Gandhinagar.
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.address
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.street
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.city
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.district
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.state
+                                        }
+                                        {'- '}
+                                        {
+                                            applicationData?.serviceId
+                                                .fatherAadharId.pinCode
+                                        }
                                     </p>
                                 </div>
                             </div>
@@ -283,90 +460,120 @@ const BirthApplication = () => {
                     </Card>
                 </div>
 
-                <Card className="bg-neutral-50 dark:bg-gray-600 mt-5">
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <div>
-                                <h5>Mother AadharId</h5>
+                <Card className="bg-neutral-50 dark:bg-gray-600 my-5">
+                    <div className="grid grid-cols-2 gap-x-3">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Mother AadharId</h5>
 
-                                <p>Uploaded by applicant for verification</p>
+                                    <p>
+                                        Uploaded by applicant for verification
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden  mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .motherAadharCard
+                                    }
+                                    alt={"Mother's Aadhar Card Image"}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
                             </div>
                         </div>
+                        <div className="col-span-1 col-start-2">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Father Aadhar Id</h5>
 
-                        <div className="border rounded-xl overflow-hidden  mb-5">
-                            <img
-                                src={adhar}
-                                alt={adhar}
-                                className="w-full object-contain max-h-[600px]"
-                            />
+                                    <p>
+                                        Uploaded by applicant for verification
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden  mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .fatherAadharCard
+                                    }
+                                    alt={"Father's Aadhar Card Image"}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <div>
-                                <h5>Father Aadhar Id</h5>
+                    <div className="grid grid-cols-2 gap-x-3">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Ration card</h5>
 
-                                <p>Uploaded by applicant for verification</p>
+                                    <p>
+                                        Uploaded by applicant for verification
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden  mb-5">
+                                <img
+                                    src={applicationData?.serviceId.rationCard}
+                                    alt={'Ration Card Image'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
                             </div>
                         </div>
+                        <div className="col-span-1 col-start-2">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Medical Report</h5>
 
-                        <div className="border rounded-xl overflow-hidden  mb-5">
-                            <img
-                                // src={adhar2}
-                                alt={adhar}
-                                className="w-full object-contain max-h-[600px]"
-                            />
+                                    <p>
+                                        Uploaded by applicant for verification
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden  mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .birthHospitalReport
+                                    }
+                                    alt={'Hospital Report of Baby Birth Image'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <div>
-                                <h5>Ration card</h5>
+                    <div className="grid grid-cols-2 gap-x-3 items-center justify-center">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Parents Marriage Certificate</h5>
 
-                                <p>Uploaded by applicant for verification</p>
+                                    <p>
+                                        Uploaded by applicant for verification
+                                    </p>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="border rounded-xl overflow-hidden  mb-5">
-                            <img
-                                // src={adhar2}
-                                alt={adhar}
-                                className="w-full object-contain max-h-[600px]"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <div>
-                                <h5>Medical Report</h5>
-
-                                <p>Uploaded by applicant for verification</p>
+                            <div className="border rounded-xl overflow-hidden  mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .marriageCertificate
+                                    }
+                                    alt={
+                                        "Marriage Certificate Image of Baby's Parents"
+                                    }
+                                    className="w-full object-contain max-h-[400px] "
+                                />
                             </div>
-                        </div>
-
-                        <div className="border rounded-xl overflow-hidden  mb-5">
-                            <img
-                                // src={adhar2}
-                                alt={adhar}
-                                className="w-full object-contain max-h-[600px]"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <div className="flex justify-between items-center mb-2">
-                            <div>
-                                <h5>Parents Marriage Certificate</h5>
-
-                                <p>Uploaded by applicant for verification</p>
-                            </div>
-                        </div>
-
-                        <div className="border rounded-xl overflow-hidden  mb-5">
-                            <img
-                                // src={adhar2}
-                                alt={adhar}
-                                className="w-full object-contain max-h-[600px]"
-                            />
                         </div>
                     </div>
                 </Card>

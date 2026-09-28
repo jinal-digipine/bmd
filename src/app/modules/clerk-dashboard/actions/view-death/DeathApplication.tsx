@@ -1,7 +1,6 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Container from '../../components/HomeContainer'
 import { ActionLink } from '@/components/shared'
-import adhar from './../../../../../assets/images/birthcard.png'
 import {
     ArrowLeft,
     CalendarDays,
@@ -13,10 +12,39 @@ import {
     Users,
 } from 'lucide-react'
 import { PiBedBold } from 'react-icons/pi'
+import { Application } from '@/app/@api/application-module/application.types'
+import { ApplicationApis } from '@/app/@api/application-module/application.api'
+import { useEffect, useState } from 'react'
 
 const goback = '/app/clerk/applications'
 
-const DeathApplication = () => {
+interface deathAplicationProp {
+    id: Application.Id
+}
+
+const DeathApplication = ({ id }: deathAplicationProp) => {
+    // const id = '6a5fe9c8a378c4e900f537d8' as Application.Id
+
+    const [applicationData, setApplicationData] = useState<Application.Detail>()
+
+    //function to fetch data based on id
+    const fetchApplicationData = async () => {
+        try {
+            const res = await ApplicationApis.get(id)
+            setApplicationData(res.data || res)
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Something went wrong while fetching Application data!!
+                </Notification>,
+            )
+        }
+    }
+
+    useEffect(() => {
+        fetchApplicationData()
+    }, [id])
+
     return (
         <main>
             <Container className="max-w-full">
@@ -58,7 +86,13 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Deceased Aadhar
                                         </p>
-                                        <p>XXXX XXXX 1231</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId
+                                                    .aadharNumber
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -67,7 +101,16 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Deceased Name
                                         </p>
-                                        <p>John Doe</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.firstName
+                                            }{' '}
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.lastName
+                                            }{' '}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -76,14 +119,24 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Date of Birth
                                         </p>
-                                        <p>10/04/1972</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.dob
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
                                     <Users className="mr-3 mt-1" />
                                     <div>
                                         <p className="font-semibold">Gender</p>
-                                        <p>Male</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.gender
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -92,7 +145,12 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Mother Name
                                         </p>
-                                        <p>John Doe</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedMotherName
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -101,7 +159,12 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Father Name
                                         </p>
-                                        <p>John Doe</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedFatherName
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -110,7 +173,12 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Date of Death
                                         </p>
-                                        <p>22/06/2024</p>
+                                        <p>
+                                            {applicationData?.serviceId.dateAndTimeOfDeath.slice(
+                                                0,
+                                                10,
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -119,7 +187,12 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Type of Death
                                         </p>
-                                        <p>Natural</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .deathType
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className=" flex">
@@ -128,7 +201,12 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Place of Death
                                         </p>
-                                        <p>Civil Hospital, Ahmedabad</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .placeOfDeath
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className=" flex">
@@ -138,8 +216,35 @@ const DeathApplication = () => {
                                             Permanent Address
                                         </p>
                                         <p>
-                                            114, sahakar colony, Sector-25,
-                                            Gandhinagar.
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.address
+                                            }
+                                            {', '}
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.street
+                                            }
+                                            {', '}
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.city
+                                            }
+                                            {', '}
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.district
+                                            }
+                                            {', '}
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.state
+                                            }
+                                            {'- '}
+                                            {
+                                                applicationData?.serviceId
+                                                    .deceasedAadharId.pinCode
+                                            }
                                         </p>
                                     </div>
                                 </div>
@@ -149,7 +254,13 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             District
                                         </p>
-                                        <p>Ahmedabad</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .officeDepartmentId.officeId
+                                                    .districtId.name
+                                            }
+                                        </p>
                                     </div>
                                 </div>
 
@@ -157,7 +268,13 @@ const DeathApplication = () => {
                                     <MapPin className="mr-3 mt-1" />
                                     <div>
                                         <p className="font-semibold">State</p>
-                                        <p>Gujarat</p>
+                                        <p>
+                                            {
+                                                applicationData?.serviceId
+                                                    .officeDepartmentId.officeId
+                                                    .districtId.stateId.name
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +300,34 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Submitted By
                                         </p>
-                                        <p>John Doe</p>
+                                        <p>
+                                            {
+                                                applicationData?.userId.aadharId
+                                                    .firstName
+                                            }{' '}
+                                            {
+                                                applicationData?.userId.aadharId
+                                                    .lastName
+                                            }
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex my-6">
+                                    <User className="mr-3 mt-1" />
+                                    <div>
+                                        <p className="font-semibold">
+                                            Submitted By
+                                        </p>
+                                        <p>
+                                            {
+                                                applicationData?.clerkId
+                                                    .aadharId.firstName
+                                            }{' '}
+                                            {
+                                                applicationData?.clerkId
+                                                    .aadharId.lastName
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex">
@@ -192,7 +336,12 @@ const DeathApplication = () => {
                                         <p className="font-semibold">
                                             Submission Date
                                         </p>
-                                        <p>23/06/2024</p>
+                                        <p>
+                                            {applicationData?.createdAt.slice(
+                                                0,
+                                                10,
+                                            )}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -220,7 +369,12 @@ const DeathApplication = () => {
                                     <p className="font-semibold">
                                         Applicant Aadhar
                                     </p>
-                                    <p>XXXX XXXX 9090</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.aadharNumber
+                                        }
+                                    </p>
                                 </div>
                             </div>
 
@@ -230,7 +384,16 @@ const DeathApplication = () => {
                                     <p className="font-semibold">
                                         Applicant Name
                                     </p>
-                                    <p>John Doe</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.firstName
+                                        }{' '}
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.lastName
+                                        }{' '}
+                                    </p>
                                 </div>
                             </div>
 
@@ -240,7 +403,12 @@ const DeathApplication = () => {
                                     <p className="font-semibold">
                                         Date of Birth
                                     </p>
-                                    <p>12/08/2001</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.dob
+                                        }
+                                    </p>
                                 </div>
                             </div>
 
@@ -248,7 +416,12 @@ const DeathApplication = () => {
                                 <Users className="mr-3 mt-1" />
                                 <div>
                                     <p className="font-semibold">Gender</p>
-                                    <p>Male</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.gender
+                                        }
+                                    </p>
                                 </div>
                             </div>
 
@@ -258,7 +431,12 @@ const DeathApplication = () => {
                                     <p className="font-semibold">
                                         Mobile Number
                                     </p>
-                                    <p>9876543210</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.contact
+                                        }
+                                    </p>
                                 </div>
                             </div>
 
@@ -268,7 +446,12 @@ const DeathApplication = () => {
                                     <p className="font-semibold">
                                         Email Address
                                     </p>
-                                    <p>john.doe@gmail.com</p>
+                                    <p>
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.email
+                                        }
+                                    </p>
                                 </div>
                             </div>
 
@@ -277,8 +460,35 @@ const DeathApplication = () => {
                                 <div>
                                     <p className="font-semibold">Address</p>
                                     <p>
-                                        114, sahakar colony, Sector-25,
-                                        Gandhinagar.
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.address
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.street
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.city
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.district
+                                        }
+                                        {', '}
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.state
+                                        }
+                                        {'- '}
+                                        {
+                                            applicationData?.serviceId
+                                                .applicantAadharId.pinCode
+                                        }{' '}
                                     </p>
                                 </div>
                             </div>
@@ -302,103 +512,153 @@ const DeathApplication = () => {
                 </div>
 
                 <Card className="bg-neutral-50 dark:bg-gray-600 mt-5">
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>Deceased Aadhar Card</h5>
-                            <p>Uploaded by applicant for verification.</p>
+                    <div className="grid grid-cols-2 gap-x-3">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Deceased Aadhar Card</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            ?.deceasedAadharCard
+                                    }
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-1 col-start-2">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Applicants Aadhar Card</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .applicantAadharCard
+                                    }
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
                         </div>
                     </div>
+                    <div className="grid grid-cols-2 gap-x-3">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Deceased Ration Card</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
 
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>Applicants Aadhar Card</h5>
-                            <p>Uploaded by applicant for verification.</p>
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .deceasedRationCard
+                                    }
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-1 col-start-2">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Medical Report</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId
+                                            .deceasedMedicalCertificate
+                                    }
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
                         </div>
                     </div>
+                    <div className="grid grid-cols-2 gap-x-3">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>PM Report</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
 
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            // src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>Deceased Ration Card</h5>
-                            <p>Uploaded by applicant for verification.</p>
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={applicationData?.serviceId.pmReport}
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
+                        </div>
+                        <div className="col-span-1 col-start-2">
+                            <div className="flex justify-between items-center mb-2">
+                                <div>
+                                    <h5>Deceased Photograph</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={
+                                        applicationData?.serviceId.deceasedPhoto
+                                    }
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[400px]"
+                                />
+                            </div>
                         </div>
                     </div>
+                    <div className="grid grid-cols-2 gap-x-3 ">
+                        <div className="col-span-1 col-start-1">
+                            <div className="flex justify-between items-center mb-2 ">
+                                <div>
+                                    <h5>FIR</h5>
+                                    <p>
+                                        Uploaded by applicant for verification.
+                                    </p>
+                                </div>
+                            </div>
 
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            // src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>Medical Report</h5>
-                            <p>Uploaded by applicant for verification.</p>
+                            <div className="border rounded-xl overflow-hidden mb-5">
+                                <img
+                                    src={applicationData?.serviceId.fir}
+                                    alt={'doc'}
+                                    className="w-full object-contain max-h-[450px]"
+                                />
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            // src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>PM Report</h5>
-                            <p>Uploaded by applicant for verification.</p>
-                        </div>
-                    </div>
-
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            // src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>Deceased Photograph</h5>
-                            <p>Uploaded by applicant for verification.</p>
-                        </div>
-                    </div>
-
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            // src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
-                    </div>
-                    <div className="flex justify-between items-center mb-2">
-                        <div>
-                            <h5>FIR</h5>
-                            <p>Uploaded by applicant for verification.</p>
-                        </div>
-                    </div>
-
-                    <div className="border rounded-xl overflow-hidden mb-5">
-                        <img
-                            // src={adhar}
-                            alt={adhar}
-                            className="w-full object-contain max-h-[600px]"
-                        />
                     </div>
                 </Card>
             </Container>

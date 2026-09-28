@@ -1,6 +1,9 @@
+import { TotalCount } from '@/app/@api/dashboard/total.types'
+import { TotalCountsApis } from '@/app/@api/dashboard/totalcounts.api'
 import { Chart, Container } from '@/components/shared'
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import { COLOR_1, COLOR_2, COLOR_3, COLOR_5 } from '@/constants/chart.constant'
+import { useEffect, useState } from 'react'
 import { BsSignpost2 } from 'react-icons/bs'
 import { FaChevronRight, FaSitemap, FaUsers, FaUserTie } from 'react-icons/fa'
 import { HiOutlineXCircle } from 'react-icons/hi'
@@ -14,10 +17,35 @@ import { PiMapTrifoldDuotone } from 'react-icons/pi'
 import { useNavigate } from 'react-router'
 
 const AdminHome = () => {
+    const [counts, setCounts] = useState<TotalCount.Base>()
+    const [monthwiseCount, setMonthWiseCount] = useState<number[]>([])
+
+    const fetchCountsValues = async () => {
+        try {
+            const res = await TotalCountsApis.list()
+            setCounts(res)
+
+            const monthRes = await TotalCountsApis.getMonthlyCount(2026)
+            if (monthRes) {
+                const ValArray = monthRes.map((item) => item.count)
+                setMonthWiseCount(ValArray)
+            }
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    something went wrong!!
+                </Notification>,
+            )
+        }
+    }
+    useEffect(() => {
+        fetchCountsValues()
+    }, [])
+
     const data = [
         {
             name: 'Total Applications',
-            data: [68, 41, 35, 62, 74, 49, 29, 75, 81, 86, 99, 79],
+            data: monthwiseCount,
         },
     ]
 
@@ -61,7 +89,7 @@ const AdminHome = () => {
                                             </p>
                                         </div>
                                         <div className="col-span-2 col-start-2 row-start-2 ml-2">
-                                            <h3>85</h3>
+                                            {counts?.totalClerks}
                                         </div>
                                     </div>
                                 </Card>
@@ -84,7 +112,7 @@ const AdminHome = () => {
                                             </p>
                                         </div>
                                         <div className="col-span-2 col-start-2 row-start-2 ml-2">
-                                            <h3>2548</h3>
+                                            {counts?.totalUsers ?? 0}
                                         </div>
                                     </div>
                                 </Card>
@@ -107,7 +135,7 @@ const AdminHome = () => {
                                             </p>
                                         </div>
                                         <div className="col-span-2 col-start-2 row-start-2 ml-2">
-                                            <h3>1</h3>
+                                            {counts?.totalStates ?? 0}
                                         </div>
                                     </div>
                                 </Card>
@@ -130,7 +158,7 @@ const AdminHome = () => {
                                             </p>
                                         </div>
                                         <div className="col-span-2 col-start-2 row-start-2 ml-2">
-                                            <h3>33</h3>
+                                            {counts?.totalDistricts ?? 0}
                                         </div>
                                     </div>
                                 </Card>
@@ -153,7 +181,7 @@ const AdminHome = () => {
                                             </p>
                                         </div>
                                         <div className="col-span-2 col-start-2 row-start-2 ml-2">
-                                            <h3>33</h3>
+                                            {counts?.totalOffices ?? 0}
                                         </div>
                                     </div>
                                 </Card>
@@ -176,7 +204,7 @@ const AdminHome = () => {
                                             </p>
                                         </div>
                                         <div className="col-span-3 col-start-2 row-start-2 ml-2">
-                                            <h3>3</h3>
+                                            {counts?.totalDepartments ?? 0}
                                         </div>
                                     </div>
                                 </Card>
@@ -253,7 +281,12 @@ const AdminHome = () => {
                             <hr />
                             <Chart
                                 height={280}
-                                series={[128, 40, 60, 28]}
+                                series={[
+                                    counts?.totalApplications ?? 0,
+                                    counts?.pendingApplications ?? 0,
+                                    counts?.approvedApplications ?? 0,
+                                    counts?.rejectedApplications ?? 0,
+                                ]}
                                 customOptions={{
                                     colors: [
                                         COLOR_1,
@@ -291,12 +324,20 @@ const AdminHome = () => {
                             />
                             <hr />
                             <div className="flex flex-row justify-evenly mt-4">
-                                <p>-Recived 128</p>
-                                <p>-pending 40</p>
+                                <p>-Recived {counts?.totalApplications ?? 0}</p>
+                                <p>
+                                    -pending {counts?.pendingApplications ?? 0}
+                                </p>
                             </div>
                             <div className="flex flex-row justify-evenly mt-4 mb-2">
-                                <p>-Approved 60</p>
-                                <p>-Rejected 28</p>
+                                <p>
+                                    -Approved{' '}
+                                    {counts?.approvedApplications ?? 0}
+                                </p>
+                                <p>
+                                    -Rejected{' '}
+                                    {counts?.rejectedApplications ?? 0}
+                                </p>
                             </div>
                         </Card>
                     </div>
@@ -394,7 +435,9 @@ const AdminHome = () => {
                                 <div className="col-span-8 ">
                                     Total Applications
                                 </div>
-                                <div className="col-start-10 ">128</div>
+                                <div className="col-start-10 ">
+                                    {counts?.totalApplications ?? 0}
+                                </div>
                             </div>
                             <hr />
                             <div className="grid grid-cols-10 grid-rows-1 gap-4  items-center">
@@ -409,7 +452,9 @@ const AdminHome = () => {
                                 <div className="col-span-8 ">
                                     Approved Applications
                                 </div>
-                                <div className="col-start-10 ">60</div>
+                                <div className="col-start-10 ">
+                                    {counts?.approvedApplications ?? 0}
+                                </div>
                             </div>
                             <hr />
                             <div className="grid grid-cols-10 grid-rows-1 gap-4  items-center   ">
@@ -424,7 +469,10 @@ const AdminHome = () => {
                                 <div className="col-span-8">
                                     Pending Applications
                                 </div>
-                                <div className="col-start-10">40</div>
+                                <div className="col-start-10">
+                                    {' '}
+                                    {counts?.pendingApplications ?? 0}
+                                </div>
                             </div>
                             <hr />
                             <div className="grid grid-cols-10 grid-rows-1 gap-4  items-center">
@@ -439,7 +487,9 @@ const AdminHome = () => {
                                 <div className="col-span-8">
                                     Rejected Applications
                                 </div>
-                                <div className="col-start-10">28</div>
+                                <div className="col-start-10">
+                                    {counts?.rejectedApplications ?? 0}
+                                </div>
                             </div>
                         </Card>
                     </div>

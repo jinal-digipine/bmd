@@ -1,16 +1,67 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import { AdaptiveCard, Container, DebouceInput } from '@/components/shared'
 import { TbSearch, TbTrash } from 'react-icons/tb'
+import { UserApis } from '@/app/@api/user/user.api'
+import { useCallback, useEffect, useState } from 'react'
+import { User } from '@/app/@api/user/user.types'
+import { UserListApis } from '@/app/@api/user/usersList.api'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 const UsersPage = () => {
+    const [users, setUsers] = useState<User.Detail[]>([])
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [totalItems, setTotalItems] = useState<number>(10)
+    const [search, setSearch] = useState<string>('')
+
     const onPaginationChange = (page: number) => {
-        console.log('onPaginationChange', page)
+        setCurrentPage(page)
+    }
+    const fetchUserData = useCallback(
+        async (page: number, limit: number, search: string) => {
+            try {
+                const response = await UserListApis.list(page, limit, search)
+                setUsers(response.data)
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        Failed to fetch users data!
+                    </Notification>,
+                )
+            }
+        },
+        [],
+    )
+    useEffect(() => {
+        fetchUserData(currentPage, pageSize, search)
+    }, [currentPage, pageSize, search, fetchUserData])
+
+    const handleDelete = (id: User.Id) => {
+        try {
+            UserApis.delete(id)
+            fetchUserData(currentPage, pageSize, search)
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    User Deleted Sucessfully.
+                </Notification>,
+            )
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to Delete User!
+                </Notification>,
+            )
+        }
     }
 
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
+    }
     return (
         <div>
             <Container>
@@ -30,7 +81,7 @@ const UsersPage = () => {
                                 // ref={}
                                 placeholder="Quick search..."
                                 suffix={<TbSearch className="text-lg" />}
-                                // onChange={(e) => onInputChange(e.target.value)}
+                                onChange={(e) => onInputChange(e.target.value)}
                             />
                         </div>
                     </div>
@@ -50,25 +101,50 @@ const UsersPage = () => {
                                     </Tr>
                                 </THead>
                                 <TBody>
-                                    <Tr>
-                                        <Td>1</Td>
-                                        <Td>John Doe</Td>
-                                        <Td>John.doe@gmail.com</Td>
-                                        <Td>9843678670</Td>
-                                        <Td>XXXX XXXX 1234</Td>
-                                        <Td>18 May 2024</Td>
-                                        <Td>
-                                            <div className="flex flex-row h-3  items-center">
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5  w-5 " />
+                                    {users.map((user, index) => (
+                                        <Tr key={user._id}>
+                                            <Td>{index + 1}</Td>
+
+                                            <Td>
+                                                {user.aadharId.firstName}{' '}
+                                                {user.aadharId.lastName}
+                                            </Td>
+
+                                            <Td>{user.email}</Td>
+
+                                            <Td>
+                                                {'+91'} {user.aadharId.contact}
+                                            </Td>
+
+                                            <Td>
+                                                {user.aadharId.aadharNumber}
+                                            </Td>
+
+                                            <Td>
+                                                {user.createdAt.slice(0, 10)}
+                                            </Td>
+
+                                            <Td>
+                                                <Button
+                                                    variant="plain"
+                                                    onClick={() =>
+                                                        handleDelete(user._id)
+                                                    }
+                                                >
+                                                    <TbTrash className="h-5 w-5" />
                                                 </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
+                                            </Td>
+                                        </Tr>
+                                    ))}
                                 </TBody>
                             </Table>
                             <div className="justify-self-end">
-                                <Pagination onChange={onPaginationChange} />
+                                <Pagination
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    total={totalItems}
+                                    onChange={onPaginationChange}
+                                />
                             </div>
                         </div>
                     </Card>

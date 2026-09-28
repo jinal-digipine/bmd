@@ -1,14 +1,37 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Container from './HomeContainer'
-import { IdCard, LogOut, Mail, Phone, User } from 'lucide-react'
+import { IdCard, LogOut, Mail, Phone, User2 } from 'lucide-react'
 import { FaUserTag, FaVenusMars } from 'react-icons/fa'
 import { GrLocation } from 'react-icons/gr'
 import { PiBagDuotone } from 'react-icons/pi'
 import { ActionLink } from '@/components/shared'
 import { LuCalendarDays } from 'react-icons/lu'
+import { useEffect, useState } from 'react'
+import { User } from '@/app/@api/user/user.types'
+import { UserApis } from '@/app/@api/user/user.api'
 
 const logOutUrl = '/'
 const MyProfile = () => {
+    const [user, setUser] = useState<User.Detail>()
+
+    const fetchUserData = async () => {
+        try {
+            const UserId = '6a51686cf7cc73300ae7e99a' as User.Id
+
+            const response = await UserApis.get(UserId)
+            setUser(response.data || response || [])
+        } catch (err: any) {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    {err.message || 'Something went wrong!!'}
+                </Notification>,
+            )
+            return []
+        }
+    }
+    useEffect(() => {
+        fetchUserData()
+    }, [])
     return (
         <main>
             <div className="mb-1"></div>
@@ -61,7 +84,7 @@ const MyProfile = () => {
                                     <div className="grid grid-cols-5 grid-rows-6 gap-4 ">
                                         <div className="col-span-2 my-2">
                                             <div className="flex flex-row">
-                                                <User className="h-5 w-5" />
+                                                <User2 className="h-5 w-5" />
 
                                                 <p className="pl-3 text-black  dark:text-gray-100">
                                                     Full Name
@@ -69,7 +92,11 @@ const MyProfile = () => {
                                             </div>
                                         </div>
                                         <div className="col-span-3 col-start-3 my-2">
-                                            <p>: Swar Patel</p>
+                                            <p>
+                                                : {user?.aadharId.firstName}{' '}
+                                                {user?.aadharId.middleName}{' '}
+                                                {user?.aadharId.lastName}
+                                            </p>
                                         </div>
                                         <div className="col-span-2 row-start-2 my-2">
                                             <div className="flex flex-row">
@@ -81,7 +108,7 @@ const MyProfile = () => {
                                             </div>
                                         </div>
                                         <div className="col-span-3 col-start-3 row-start-2 my-2">
-                                            <p>: swarpatel@gov.in</p>
+                                            <p>: {`${user?.aadharId.email}`}</p>
                                         </div>
                                         <div className="col-span-2 row-start-3 my-2">
                                             <div className="flex flex-row">
@@ -93,7 +120,10 @@ const MyProfile = () => {
                                             </div>
                                         </div>
                                         <div className="col-span-3 col-start-3 row-start-3 my-2">
-                                            <p>: 9843678670</p>
+                                            <p>
+                                                : {'+91'}{' '}
+                                                {`${user?.aadharId.contact}`}
+                                            </p>
                                         </div>
                                         <div className="col-span-2 row-start-4 my-2">
                                             <div className="flex flex-row">
@@ -105,7 +135,10 @@ const MyProfile = () => {
                                             </div>
                                         </div>
                                         <div className="col-span-3 col-start-3 row-start-4 my-2">
-                                            <p>: XXXX XXXX 1234</p>
+                                            <p>
+                                                :{' '}
+                                                {`${user?.aadharId.aadharNumber}`}
+                                            </p>
                                         </div>
                                         <div className="col-span-2 row-start-5 my-2">
                                             <div className="flex flex-row">
@@ -117,7 +150,10 @@ const MyProfile = () => {
                                             </div>
                                         </div>
                                         <div className="col-span-3 col-start-3 row-start-5 my-2">
-                                            <p>: 22/11/1988</p>
+                                            <p>
+                                                : {'  '}
+                                                {`${user?.aadharId.dob}`}
+                                            </p>
                                         </div>
                                         <div className="col-span-2 row-start-6 my-2">
                                             <div className="flex flex-row">
@@ -128,7 +164,9 @@ const MyProfile = () => {
                                             </div>
                                         </div>
                                         <div className="col-span-3 col-start-3 row-start-6 my-2">
-                                            <p>: Male</p>
+                                            <p>
+                                                : {`${user?.aadharId.gender}`}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -159,13 +197,13 @@ const MyProfile = () => {
                                     <p className="text-black  dark:text-gray-100 ">
                                         Designation
                                     </p>
-                                    <p className="">Clerk</p>
+                                    <p className="">{`${user?.roleId.name}`}</p>
                                 </div>
                                 <div className="col-span-2 row-start-2 col-start-3 pt-4">
                                     <p className="text-black  dark:text-gray-100 ">
                                         Employee Id
                                     </p>
-                                    <p className="">GOV9820012</p>
+                                    <p className="">{`${user?.employeeId}`}</p>
                                 </div>
                                 <div className="col-span-2 row-start-2 col-start-5 pt-4">
                                     <p className="text-black  dark:text-gray-100  ">
@@ -202,7 +240,8 @@ const MyProfile = () => {
                                             <hr />
                                         </div>
                                         <div className="col-span-4 mb-1">
-                                            : Gujarat
+                                            :{' '}
+                                            {`${user?.officeDepartmentId.officeId?.districtId.stateId.name}`}
                                             <hr />
                                         </div>
 
@@ -211,7 +250,8 @@ const MyProfile = () => {
                                             <hr />
                                         </div>
                                         <div className="col-span-4 row-start-2">
-                                            : Ahmedabad
+                                            :{' '}
+                                            {`${user?.officeDepartmentId.officeId?.districtId.name}`}
                                             <hr />
                                         </div>
                                         <div className="row-start-3 text-black  dark:text-gray-100">
@@ -219,7 +259,8 @@ const MyProfile = () => {
                                             <hr />
                                         </div>
                                         <div className="col-span-4 row-start-3">
-                                            : Ahmedabad Municipal Corporation
+                                            :{' '}
+                                            {`${user?.officeDepartmentId.officeId?.name}`}
                                             <hr />
                                         </div>
                                     </div>

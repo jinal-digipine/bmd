@@ -1,22 +1,74 @@
-import { Button, Card } from '@/components/ui'
+import { Button, Card, Notification, toast } from '@/components/ui'
 import Table from '@/components/ui/Table'
 import Pagination from '@/components/ui/Pagination'
 import { AdaptiveCard, Container, DebouceInput } from '@/components/shared'
 import { TbSearch, TbTrash } from 'react-icons/tb'
 import { FiPlus } from 'react-icons/fi'
 import { useNavigate } from 'react-router'
+import { useCallback, useEffect, useState } from 'react'
+import { District } from '@/app/@api/district-module/district.types'
+import { DistrictApis } from '@/app/@api/district-module/district.api'
 
 const { Tr, Td, TBody, THead, Th } = Table
 
 const DistrictPage = () => {
     const navigate = useNavigate()
+    const [districts, setDistricts] = useState<District.Detail[]>([])
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [totalItems, setTotalItems] = useState<number>(33)
+
+    const [search, setSearch] = useState<string>('')
 
     const onPaginationChange = (page: number) => {
-        console.log('onPaginationChange', page)
+        setCurrentPage(page)
     }
 
+    const fetchDistrcitData = useCallback(
+        async (page: number, limit: number, search: string) => {
+            try {
+                const response = await DistrictApis.list(page, limit, search)
+                setDistricts(response.data || response || [])
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        Failed to fetch disricts data!
+                    </Notification>,
+                )
+                return []
+            }
+        },
+        [],
+    )
+    useEffect(() => {
+        fetchDistrcitData(currentPage, pageSize, search)
+    }, [currentPage, pageSize, search, fetchDistrcitData])
+
+    const handleDelete = async (id: District.Id) => {
+        try {
+            await DistrictApis.delete(id)
+            fetchDistrcitData(currentPage, pageSize, search)
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    District Deleted Sucessfully.
+                </Notification>,
+            )
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to Delete District!
+                </Notification>,
+            )
+        }
+    }
     const handleAdd = () => {
         navigate('/app/admin/action/add-district')
+    }
+
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
     }
 
     return (
@@ -33,25 +85,13 @@ const DistrictPage = () => {
                             </div>
                         </div>
                     </div>
-                    <Card className="mt-6">
-                        <div className="grid grid-cols-5 grid-rows-1 gap-4">
-                            <div>
-                                <p>State Name</p> <h6>Gujarat</h6>
-                            </div>
-                            <div>
-                                <p>Total Districts</p>
-                                <h6>33</h6>
-                            </div>
-                        </div>
-                    </Card>
 
                     <div className="grid grid-cols-10 grid-rows-1 gap-0.5 ">
                         <div className="col-span-3 flex justify-end items-end">
                             <DebouceInput
-                                // ref={}
                                 placeholder="Quick search..."
                                 suffix={<TbSearch className="text-lg" />}
-                                // onChange={(e) => onInputChange(e.target.value)}
+                                onChange={(e) => onInputChange(e.target.value)}
                             />
                         </div>
                         <div className="col-span-2 col-start-9 flex justify-end items-center">
@@ -77,40 +117,51 @@ const DistrictPage = () => {
                                         <Th>Sr.No.</Th>
                                         <Th>District Name</Th>
                                         <Th>State</Th>
+                                        <Th>Creation Date</Th>
                                         <Th>Actions</Th>
                                     </Tr>
                                 </THead>
                                 <TBody>
-                                    <Tr>
-                                        <Td>1</Td>
-                                        <Td>Ahmedabad</Td>
-
-                                        <Td>Gujarat</Td>
-                                        <Td className="">
-                                            <div className="flex flex-row h-4  items-center">
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5 w-5 " />
-                                                </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
-                                    <Tr>
-                                        <Td>2</Td>
-                                        <Td>Anand</Td>
-                                        <Td>Gujarat</Td>
-
-                                        <Td className="">
-                                            <div className="flex flex-row h-3  items-center">
-                                                <Button variant="plain">
-                                                    <TbTrash className="h-5  w-5 " />
-                                                </Button>
-                                            </div>
-                                        </Td>
-                                    </Tr>
+                                    {districts.map((district, index) => (
+                                        <Tr key={district._id}>
+                                            <Td>
+                                                {(currentPage - 1) * pageSize +
+                                                    index +
+                                                    1}
+                                            </Td>
+                                            <Td>{district.name}</Td>
+                                            <Td>{district.stateId.name}</Td>
+                                            <Td>
+                                                {district.createdAt.slice(
+                                                    0,
+                                                    10,
+                                                )}
+                                            </Td>
+                                            <Td className="">
+                                                <div className="flex flex-row h-4  items-center">
+                                                    <Button
+                                                        variant="plain"
+                                                        onClick={() =>
+                                                            handleDelete(
+                                                                district._id,
+                                                            )
+                                                        }
+                                                    >
+                                                        <TbTrash className="h-5 w-5 " />
+                                                    </Button>
+                                                </div>
+                                            </Td>
+                                        </Tr>
+                                    ))}
                                 </TBody>
                             </Table>
                             <div className="justify-self-end">
-                                <Pagination onChange={onPaginationChange} />
+                                <Pagination
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    total={totalItems}
+                                    onChange={onPaginationChange}
+                                />
                             </div>
                         </div>
                     </Card>
