@@ -1,22 +1,41 @@
 import {
-    PiHouseLineDuotone,
-    PiArrowsInDuotone,
-    PiBookOpenUserDuotone,
-    PiBookBookmarkDuotone,
-    PiAcornDuotone,
-    PiBagSimpleDuotone,
+    PiClipboardTextDuotone,
+    PiBabyCarriageDuotone,
+    PiHeartDuotone,
+    PiBedDuotone,
+    PiHandshakeDuotone,
+    PiUserCircleDuotone,
+    PiUserListDuotone,
+    PiUsersFourFill,
+    PiMapTrifoldDuotone,
+    PiMapPinSimpleDuotone,
 } from 'react-icons/pi'
 import type { JSX } from 'react'
+import { HiHome } from 'react-icons/hi'
+import { MdCelebration, MdOutlineMiscellaneousServices } from 'react-icons/md'
+import { FaUsers } from 'react-icons/fa'
+import { LiaSitemapSolid } from 'react-icons/lia'
+import { RiAdminFill } from 'react-icons/ri'
 
 export type NavigationIcons = Record<string, JSX.Element>
 
 const navigationIcon: NavigationIcons = {
-    home: <PiHouseLineDuotone />,
-    singleMenu: <PiAcornDuotone />,
-    collapseMenu: <PiArrowsInDuotone />,
-    groupSingleMenu: <PiBookOpenUserDuotone />,
-    groupCollapseMenu: <PiBookBookmarkDuotone />,
-    groupMenu: <PiBagSimpleDuotone />,
+    applications: <PiClipboardTextDuotone />,
+    services: <PiHandshakeDuotone />,
+    birth: <PiBabyCarriageDuotone />,
+    marriage: <PiHeartDuotone />,
+    death: <PiBedDuotone />,
+    user: <PiUserCircleDuotone />,
+    clerk: <PiUserListDuotone />,
+    admin: <RiAdminFill />,
+    home: <HiHome />,
+    manage: <MdOutlineMiscellaneousServices />,
+    states: <PiMapTrifoldDuotone />,
+    districts: <PiMapPinSimpleDuotone />,
+    offices: <LiaSitemapSolid />,
+    clerks: <FaUsers />,
+    users: <PiUsersFourFill />,
+    holidays: <MdCelebration />,
 }
 
 export default navigationIcon

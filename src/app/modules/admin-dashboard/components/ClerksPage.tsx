@@ -1,0 +1,260 @@
+import { Button, Card, Notification, Select, toast } from '@/components/ui'
+import Table from '@/components/ui/Table'
+import Pagination from '@/components/ui/Pagination'
+import { AdaptiveCard, Container, DebouceInput } from '@/components/shared'
+import { TbPencil, TbSearch, TbTrash } from 'react-icons/tb'
+import { FiPlus } from 'react-icons/fi'
+import { useNavigate } from 'react-router'
+import Dialog from '@/components/ui/Dialog'
+import type { MouseEvent } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { User } from '@/app/@api/user/user.types'
+import { ClerkListApis } from '@/app/@api/user/clerkList.api'
+import { UserApis } from '@/app/@api/user/user.api'
+
+const { Tr, Td, TBody, THead, Th } = Table
+
+const statusOptions = [
+    { label: 'Active', value: User.EStatus.ACTIVE },
+    { label: 'Pending', value: User.EStatus.PENDING },
+    { label: 'Block', value: User.EStatus.BLOCKED },
+]
+
+const ClerkPage = () => {
+    const navigate = useNavigate()
+    const [dialogIsOpen, setIsOpen] = useState(false)
+    const [clerks, setClerks] = useState<User.Detail[]>([])
+
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(5)
+    const [totalItems, setTotalItems] = useState<number>(10)
+    const [search, setSearch] = useState<string>('')
+
+    //updating clerk status.
+    const [selectedClerk, setSelectedClerk] = useState<User.Detail | null>(null)
+    const [newStatus, setNewStatus] = useState<User.EStatus | null>(null)
+
+    const onPaginationChange = (page: number) => {
+        setCurrentPage(page)
+    }
+
+    const fetchClerkData = useCallback(
+        async (page: number, limit: number, search?: string) => {
+            try {
+                const response = await ClerkListApis.list(page, limit, search)
+
+                setClerks(response.data || response)
+            } catch {
+                toast.push(
+                    <Notification closable type="danger" duration={3000}>
+                        something went wrong!!
+                    </Notification>,
+                )
+                setClerks([])
+            }
+        },
+        [],
+    )
+
+    useEffect(() => {
+        fetchClerkData(currentPage, pageSize, search)
+    }, [currentPage, pageSize, search, fetchClerkData])
+
+    //dialogbox for for add clerk page
+    const openDialog = (clerk: User.Detail) => {
+        setIsOpen(true)
+        setSelectedClerk(clerk)
+        setNewStatus(clerk.status)
+    }
+
+    const onDialogClose = (e: MouseEvent) => {
+        setIsOpen(false)
+        setSelectedClerk(null)
+        setNewStatus(null)
+    }
+
+    const handleAdd = () => {
+        navigate('/app/admin/action/clerk-signup')
+    }
+
+    function onInputChange(value: string): void {
+        setSearch(value)
+        setCurrentPage(1)
+    }
+
+    //fun to change the status of clerk
+    const handleStatus = async () => {
+        if (!selectedClerk || !newStatus) {
+            return
+        }
+        try {
+            await UserApis.update(selectedClerk?._id, {
+                status: newStatus,
+            })
+            toast.push(
+                <Notification closable type="success" duration={3000}>
+                    This Clerks Status is Updated.
+                </Notification>,
+            )
+        } catch {
+            toast.push(
+                <Notification closable type="danger" duration={3000}>
+                    Failed to update status of this clerk!!
+                </Notification>,
+            )
+        }
+    }
+    return (
+        <div>
+            <Container>
+                <AdaptiveCard>
+                    <div className="grid grid-cols-4 grid-rows-1 gap-2">
+                        <div className="col-span-1 col-start-1">
+                            <div className="pt-4 pl-3">
+                                <h2>Clerks</h2>
+                                <p>View and Manage all clerks in system.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-10 grid-rows-1 gap-0.5 ">
+                        <div className="col-span-3 flex justify-end items-end">
+                            <DebouceInput
+                                placeholder="Quick search..."
+                                suffix={<TbSearch className="text-lg" />}
+                                onChange={(e) => onInputChange(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="col-span-2 col-start-9 flex justify-end items-center ">
+                            <Button
+                                type="button"
+                                variant="solid"
+                                className="mt-8 justify-self-end "
+                                onClick={handleAdd}
+                            >
+                                <div className="flex flex-row">
+                                    <FiPlus className="mr-2 mt-1" />
+                                    Add Clerk
+                                </div>
+                            </Button>
+                        </div>
+                    </div>
+
+                    <Card className="mt-6">
+                        <div>
+                            <Table>
+                                <THead className="text-4xl">
+                                    <Tr>
+                                        <Th>Sr.No.</Th>
+                                        <Th>Full Name</Th>
+                                        <Th>Employee Id</Th>
+                                        <Th>Office</Th>
+                                        <Th>District</Th>
+                                        <Th>Status</Th>
+                                        <Th>Contact NO.</Th>
+                                        <Th>Email ID.</Th>
+                                        <Th>Registered On</Th>
+                                        <Th>Actions</Th>
+                                    </Tr>
+                                </THead>
+                                <TBody>
+                                    {clerks.map((clerk, index) => (
+                                        <Tr key={clerk._id}>
+                                            <Td>{index + 1}</Td>
+                                            <Td>
+                                                {clerk.aadharId.firstName}{' '}
+                                                {clerk.aadharId.lastName}
+                                            </Td>
+                                            <Td>{clerk.employeeId}</Td>
+                                            <Td>
+                                                {
+                                                    clerk.officeDepartmentId
+                                                        .officeId.name
+                                                }
+                                            </Td>
+                                            <Td>
+                                                {
+                                                    clerk.officeDepartmentId
+                                                        .officeId.districtId
+                                                        .name
+                                                }
+                                            </Td>
+                                            <Td>{clerk.status}</Td>
+                                            <Td>
+                                                {'+91'} {clerk.aadharId.contact}
+                                            </Td>
+                                            <Td>{clerk.email}</Td>
+                                            <Td>
+                                                {clerk.createdAt.slice(0, 10)}
+                                            </Td>
+                                            <Td>
+                                                <div className="flex flex-row h-3  items-center">
+                                                    <Button
+                                                        variant="plain"
+                                                        onClick={() =>
+                                                            openDialog(clerk)
+                                                        }
+                                                    >
+                                                        <TbPencil className="h-5 w-5  " />
+                                                    </Button>
+
+                                                    <Button variant="plain">
+                                                        <TbTrash className="h-5 w-5 " />
+                                                    </Button>
+                                                </div>
+                                            </Td>
+                                        </Tr>
+                                    ))}
+                                </TBody>
+                            </Table>
+                            <div className="justify-self-end">
+                                <Pagination
+                                    currentPage={currentPage}
+                                    pageSize={pageSize}
+                                    total={totalItems}
+                                    onChange={onPaginationChange}
+                                />
+                            </div>
+                        </div>
+                    </Card>
+                </AdaptiveCard>
+            </Container>
+
+            {/* dialogbox for update */}
+            <div>
+                <Dialog
+                    isOpen={dialogIsOpen}
+                    onClose={onDialogClose}
+                    onRequestClose={onDialogClose}
+                >
+                    <h5 className="mb-4">Change Staus</h5>
+                    <Select
+                        placeholder="set status"
+                        options={statusOptions}
+                        value={statusOptions.find(
+                            (opt) => opt.value === newStatus,
+                        )}
+                        onChange={(opti) =>
+                            setNewStatus(opti?.value as User.EStatus)
+                        }
+                    />
+                    <div className="text-right mt-6">
+                        <Button
+                            className="ltr:mr-2 rtl:ml-2"
+                            variant="plain"
+                            onClick={onDialogClose}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="solid" onClick={handleStatus}>
+                            Done
+                        </Button>
+                    </div>
+                </Dialog>
+            </div>
+        </div>
+    )
+}
+
+export default ClerkPage

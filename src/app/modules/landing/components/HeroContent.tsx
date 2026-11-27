@@ -4,8 +4,8 @@ import dashImage from '../../../../assets/images/dashboard_image.png'
 
 const HeroContent = () => {
     return (
-        <div className="max-w-7xl mx-auto px-4 flex min-h-screen flex-col items-center justify-between">
-            <div className="flex flex-col min-h-screen pt-20 md:pt-40 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto  flex min-h-screen flex-col items-center justify-between">
+            <div className="flex flex-col min-h-screen pt-10 md:pt-20 relative overflow-hidden">
                 <div>
                     <TextGenerateEffect
                         wordClassName="text-2xl md:text-4xl lg:text-8xl font-bold max-w-7xl mx-auto text-center mt-6 relative z-10"

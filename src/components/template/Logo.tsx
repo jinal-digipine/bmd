@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { APP_NAME } from '@/constants/app.constant'
 import type { CommonProps } from '@/@types/common'
+import logos from '@/assets/images/logo-e-civil.png'
 
 interface LogoProps extends CommonProps {
     type?: 'full' | 'streamline'
@@ -9,12 +10,12 @@ interface LogoProps extends CommonProps {
     logoWidth?: number | string
 }
 
-const LOGO_SRC_PATH = '/img/logo/'
+// const LOGO_SRC_PATH = '/img/logo/'
 
 const Logo = (props: LogoProps) => {
     const {
-        type = 'full',
-        mode = 'light',
+        // type = 'full',
+        // mode = 'light',
         className,
         imgClass,
         style,
@@ -31,7 +32,8 @@ const Logo = (props: LogoProps) => {
         >
             <img
                 className={imgClass}
-                src={`${LOGO_SRC_PATH}logo-${mode}-${type}.png`}
+                // src={`${LOGO_SRC_PATH}logo-${mode}-${type}.png`}
+                src={logos}
                 alt={`${APP_NAME} logo`}
             />
         </div>

@@ -1,7 +1,5 @@
 import HeroContent from './components/HeroContent'
-import NavigationBar from './components/NavigationBar'
 import Features from './components/Features'
-import LandingFooter from './components/LandingFooter'
 import { useThemeStore } from '@/store/themeStore'
 import useDarkMode from '@/utils/hooks/useDarkMode'
 import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant'
@@ -14,13 +12,8 @@ const Landing = () => {
     const schema = useThemeStore((state) => state.themeSchema)
     const setSchema = useThemeStore((state) => state.setSchema)
 
-    const toggleMode = () => {
-        setMode(mode === MODE_LIGHT ? MODE_DARK : MODE_LIGHT)
-    }
-
     return (
         <main className="px-4 lg:px-0 text-base">
-            <NavigationBar toggleMode={toggleMode} mode={mode} />
             <div className="relative">
                 <div
                     style={{
@@ -36,7 +29,6 @@ const Landing = () => {
                 setSchema={setSchema}
                 onModeChange={(value) => setMode(value ? 'dark' : 'light')}
             />
-            <LandingFooter mode={mode} />
         </main>
     )
 }
